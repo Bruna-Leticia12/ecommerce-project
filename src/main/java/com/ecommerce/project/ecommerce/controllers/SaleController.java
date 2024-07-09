@@ -1,11 +1,9 @@
 package com.ecommerce.project.ecommerce.controllers;
 
 import com.ecommerce.project.ecommerce.dto.SaleDto;
+import com.ecommerce.project.ecommerce.dto.request.SaleRequest;
 import com.ecommerce.project.ecommerce.services.SaleService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/venda")
@@ -18,10 +16,20 @@ public class SaleController {
     }
 
     @PostMapping
-    public SaleDto inserirVenda (@RequestBody SaleDto saleDto){
+    public SaleDto inserirVenda (@RequestBody SaleRequest saleRequest){
 
-        SaleDto response = saleService.createSale(saleDto);
+        SaleDto response = saleService.createSale(saleRequest);
 
-        return saleDto;
+        return response;
     }
+
+
+//    @GetMapping
+//    public List<SaleDto> listarVendas(){
+//
+//        List<SaleDto> response = saleService.getSale();
+//
+//        return response;
+//    }
+
 }

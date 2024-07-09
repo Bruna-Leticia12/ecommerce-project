@@ -50,7 +50,7 @@ public class ProductController {
     }
 
     @DeleteMapping
-    public void deleteProduto (@RequestParam Integer id){
+    public void deletarProduto (@RequestParam Integer id){
         productService.deleteById(id);
     }
 

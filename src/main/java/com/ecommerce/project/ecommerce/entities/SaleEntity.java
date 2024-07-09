@@ -1,5 +1,6 @@
 package com.ecommerce.project.ecommerce.entities;
 
+import com.ecommerce.project.ecommerce.enums.SaleStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,16 +14,18 @@ public class SaleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int id_pedido;
+    private int idPedido;
+    private SaleStatus saleStatus;
     private LocalDate data;
     private LocalDate data_update;
 
 
     public SaleEntity(){}
 
-    public SaleEntity(int id, int id_pedido, LocalDate data, LocalDate data_update) {
+    public SaleEntity(int id, int idPedido, SaleStatus saleStatus, LocalDate data, LocalDate data_update) {
         this.id = id;
-        this.id_pedido = id_pedido;
+        this.idPedido = idPedido;
+        this.saleStatus = saleStatus;
         this.data = data;
         this.data_update = data_update;
     }
@@ -31,8 +34,12 @@ public class SaleEntity {
         return id;
     }
 
-    public int getId_pedido() {
-        return id_pedido;
+    public int getIdPedido() {
+        return idPedido;
+    }
+
+    public SaleStatus getSaleStatus() {
+        return saleStatus;
     }
 
     public LocalDate getData() {
@@ -47,8 +54,12 @@ public class SaleEntity {
         this.id = id;
     }
 
-    public void setId_pedido(int id_pedido) {
-        this.id_pedido = id_pedido;
+    public void setIdPedido(int idPedido) {
+        this.idPedido = idPedido;
+    }
+
+    public void setSaleStatus(SaleStatus saleStatus) {
+        this.saleStatus = saleStatus;
     }
 
     public void setData(LocalDate data) {
