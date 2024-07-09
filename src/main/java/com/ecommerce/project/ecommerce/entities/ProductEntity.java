@@ -20,6 +20,7 @@ public class ProductEntity {
     private String descricao;
     private boolean ativo;
     private LocalDate data;
+    private LocalDate dataUpdate;
 
     public ProductEntity(){}
 
@@ -28,7 +29,7 @@ public class ProductEntity {
         this.preco = preco;
     }
 
-    public ProductEntity(int id, int id_categoria, String nome, double preco, int quantidade, String descricao, boolean ativo, LocalDate data) {
+    public ProductEntity(int id, int id_categoria, String nome, double preco, int quantidade, String descricao, boolean ativo, LocalDate data, LocalDate dataUpdate) {
         this.id = id;
         this.id_categoria = id_categoria;
         this.nome = nome;
@@ -37,6 +38,7 @@ public class ProductEntity {
         this.descricao = descricao;
         this.ativo = ativo;
         this.data = data;
+        this.dataUpdate = dataUpdate;
     }
 
     public int getId() {
@@ -71,6 +73,10 @@ public class ProductEntity {
         return data;
     }
 
+    public LocalDate getDataUpdate() {
+        return dataUpdate;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -101,5 +107,9 @@ public class ProductEntity {
 
     public void setData(LocalDate data) {
         this.data = data;
+    }
+
+    public void setDataUpdate(LocalDate dataUpdate) {
+        this.dataUpdate = dataUpdate;
     }
 }

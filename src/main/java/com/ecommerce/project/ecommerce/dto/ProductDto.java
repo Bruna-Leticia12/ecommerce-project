@@ -11,10 +11,11 @@ public class ProductDto {
     private String descricao;
     private boolean ativo;
     private LocalDate data;
+    private LocalDate dataUpdate;
 
     public ProductDto(){};
 
-    public ProductDto(int id_categoria, String nome, double preco, int quantidade, String descricao, boolean ativo, LocalDate data) {
+    public ProductDto(int id_categoria, String nome, double preco, int quantidade, String descricao, boolean ativo, LocalDate data, LocalDate dataUpdate) {
         this.id_categoria = id_categoria;
         this.nome = nome;
         this.preco = preco;
@@ -22,6 +23,7 @@ public class ProductDto {
         this.descricao = descricao;
         this.ativo = ativo;
         this.data = data;
+        this.dataUpdate = dataUpdate;
     }
 
     public String getDescricao() {
@@ -52,6 +54,10 @@ public class ProductDto {
         return id_categoria;
     }
 
+    public LocalDate getDataUpdate() {
+        return dataUpdate;
+    }
+
     public void setId_categoria(int id_categoria) {
         this.id_categoria = id_categoria;
     }
@@ -78,5 +84,9 @@ public class ProductDto {
 
     public void setData(LocalDate data) {
         this.data = data;
+    }
+
+    public void setDataUpdate(LocalDate dataUpdate) {
+        this.dataUpdate = dataUpdate;
     }
 }

@@ -1,6 +1,7 @@
 package com.ecommerce.project.ecommerce.controllers;
 
 import com.ecommerce.project.ecommerce.dto.ProductDto;
+import com.ecommerce.project.ecommerce.dto.request.ProductRequest;
 import com.ecommerce.project.ecommerce.services.ProductService;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,10 +36,19 @@ public class ProductController {
     @GetMapping("/id")
     public ProductDto getPorId(@RequestParam Integer id){
 
-        ProductDto response = productService.findyById(id);
+        ProductDto response = productService.findById(id);
 
         return response;
     }
+
+    @PutMapping
+    public ProductDto atualizarProduto (@RequestParam Integer id, @RequestBody ProductRequest productRequest) {
+
+        ProductDto response = productService.updateById(id, productRequest);
+
+        return response;
+    }
+
 
 
 }
