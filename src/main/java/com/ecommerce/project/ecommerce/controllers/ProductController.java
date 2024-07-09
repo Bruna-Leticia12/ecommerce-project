@@ -49,6 +49,9 @@ public class ProductController {
         return response;
     }
 
-
+    @DeleteMapping
+    public void deleteProduto (@RequestParam Integer id){
+        productService.deleteById(id);
+    }
 
 }

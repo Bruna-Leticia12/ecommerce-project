@@ -98,9 +98,10 @@ public class ProductService {
         return productDto;
     }
 
+    public void deleteById(Integer id) {
 
+        productRepository.deleteById(id);
 
-
-
+    }
 
 }
