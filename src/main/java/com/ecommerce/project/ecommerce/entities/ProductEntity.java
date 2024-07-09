@@ -1,13 +1,17 @@
 package com.ecommerce.project.ecommerce.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 import java.time.LocalDate;
-import java.util.Date;
 
+@Entity(name = "PRODUTOS")
 public class ProductEntity {
 
-    @JsonIgnore
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private int id_categoria;
     private String nome;
@@ -67,4 +71,35 @@ public class ProductEntity {
         return data;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setId_categoria(int id_categoria) {
+        this.id_categoria = id_categoria;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setPreco(double preco) {
+        this.preco = preco;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
 }

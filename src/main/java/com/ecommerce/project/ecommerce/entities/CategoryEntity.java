@@ -1,10 +1,15 @@
 package com.ecommerce.project.ecommerce.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
+@Entity(name = "CATEGORIAS")
 public class CategoryEntity {
 
-    @JsonIgnore
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nome;
     private boolean ativo;
@@ -28,5 +33,17 @@ public class CategoryEntity {
 
     public boolean isAtivo() {
         return ativo;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 }

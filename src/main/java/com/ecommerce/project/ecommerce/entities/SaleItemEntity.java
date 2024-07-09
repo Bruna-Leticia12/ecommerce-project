@@ -1,10 +1,15 @@
 package com.ecommerce.project.ecommerce.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
+@Entity(name = "ITENSVENDAS")
 public class SaleItemEntity {
 
-    @JsonIgnore
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private int id_produto;
     private int id_venda;
@@ -39,5 +44,25 @@ public class SaleItemEntity {
 
     public double valor_total (){
         return valor_total;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setId_produto(int id_produto) {
+        this.id_produto = id_produto;
+    }
+
+    public void setId_venda(int id_venda) {
+        this.id_venda = id_venda;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public void setValor_total(double valor_total) {
+        this.valor_total = valor_total;
     }
 }

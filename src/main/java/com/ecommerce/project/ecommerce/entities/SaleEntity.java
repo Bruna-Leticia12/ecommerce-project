@@ -1,12 +1,17 @@
 package com.ecommerce.project.ecommerce.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 import java.time.LocalDate;
 
+@Entity(name = "VENDAS")
 public class SaleEntity {
 
-    @JsonIgnore
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private int id_pedido;
     private LocalDate data;
@@ -36,5 +41,21 @@ public class SaleEntity {
 
     public LocalDate getData_update() {
         return data_update;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setId_pedido(int id_pedido) {
+        this.id_pedido = id_pedido;
+    }
+
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
+
+    public void setData_update(LocalDate data_update) {
+        this.data_update = data_update;
     }
 }

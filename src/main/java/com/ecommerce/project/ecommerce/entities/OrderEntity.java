@@ -1,13 +1,17 @@
 package com.ecommerce.project.ecommerce.entities;
 
-import com.fasterxml.jackson.annotation.JacksonInject;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 import java.time.LocalDate;
 
+@Entity(name = "PEDIDOS")
 public class OrderEntity {
 
-    @JsonIgnore
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private int id_cliente;
     private double valor_total;
@@ -42,5 +46,25 @@ public class OrderEntity {
 
     public LocalDate getData() {
         return data;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setId_cliente(int id_cliente) {
+        this.id_cliente = id_cliente;
+    }
+
+    public void setValor_total(double valor_total) {
+        this.valor_total = valor_total;
+    }
+
+    public void setEnviado(boolean enviado) {
+        this.enviado = enviado;
+    }
+
+    public void setData(LocalDate data) {
+        this.data = data;
     }
 }

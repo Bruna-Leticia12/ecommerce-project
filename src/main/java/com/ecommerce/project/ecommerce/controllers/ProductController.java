@@ -2,12 +2,10 @@ package com.ecommerce.project.ecommerce.controllers;
 
 import com.ecommerce.project.ecommerce.dto.ProductDto;
 import com.ecommerce.project.ecommerce.services.ProductService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/produto")
 public class ProductController {
 
     private ProductService productService;
@@ -16,10 +14,10 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/produto")
-    public ProductDto inserirProduto (){
+    @PostMapping
+    public ProductDto inserirProduto (@RequestBody ProductDto productDto){
 
-        ProductDto productDto = productService.createProduct();
+        ProductDto response = productService.createProduct(productDto);
 
         return productDto;
     }
