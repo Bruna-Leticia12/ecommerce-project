@@ -8,6 +8,9 @@ import com.ecommerce.project.ecommerce.repositories.SaleRepository;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SaleService {
@@ -37,6 +40,24 @@ public class SaleService {
                 saleEntity.getData_update());
 
         return saleDto;
-
     }
+
+    public List<SaleDto> getAllSales() {
+
+        List<SaleEntity> saleEntities = saleRepository.findAll();
+        List<SaleDto> saleDtos = saleEntities.stream().map(elemento -> {
+            SaleDto saleDto = new SaleDto();
+
+            saleDto.setIdPedido(elemento.getIdPedido());
+            saleDto.setSaleStatus(elemento.getSaleStatus());
+            saleDto.setData(elemento.getData());
+            saleDto.setData_update(elemento.getData_update());
+
+            return saleDto;
+
+        }).collect(Collectors.toList());
+
+        return saleDtos;
+    }
+
 }

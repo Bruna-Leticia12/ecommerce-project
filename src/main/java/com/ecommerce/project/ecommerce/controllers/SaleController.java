@@ -5,6 +5,8 @@ import com.ecommerce.project.ecommerce.dto.request.SaleRequest;
 import com.ecommerce.project.ecommerce.services.SaleService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/venda")
 public class SaleController {
@@ -23,13 +25,12 @@ public class SaleController {
         return response;
     }
 
+    @GetMapping
+    public List<SaleDto> listarVendas(){
 
-//    @GetMapping
-//    public List<SaleDto> listarVendas(){
-//
-//        List<SaleDto> response = saleService.getSale();
-//
-//        return response;
-//    }
+        List<SaleDto> response = saleService.getAllSales();
+
+        return response;
+    }
 
 }

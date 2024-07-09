@@ -11,6 +11,8 @@ public class SaleDto {
     private LocalDate data;
     private LocalDate data_update;
 
+    public SaleDto() {};
+
     public SaleDto(int idPedido, SaleStatus saleStatus, LocalDate data, LocalDate data_update) {
         this.idPedido = idPedido;
         this.saleStatus = saleStatus;
@@ -18,7 +20,7 @@ public class SaleDto {
         this.data_update = data_update;
     }
 
-    public int getId_pedido() {
+    public int getIdPedido() {
         return idPedido;
     }
 
@@ -34,8 +36,8 @@ public class SaleDto {
         return data_update;
     }
 
-    public void setId_pedido(int id_pedido) {
-        this.idPedido = id_pedido;
+    public void setIdPedido(int idPedido) {
+        this.idPedido = idPedido;
     }
 
     public void setSaleStatus(SaleStatus saleStatus) {
