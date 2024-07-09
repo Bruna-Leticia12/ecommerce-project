@@ -1,4 +1,4 @@
-package com.ecommerce.project.ecommerce.service;
+package com.ecommerce.project.ecommerce.services;
 
 import com.ecommerce.project.ecommerce.dto.ProductDto;
 import org.springframework.stereotype.Service;

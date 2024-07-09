@@ -1,7 +1,7 @@
 package com.ecommerce.project.ecommerce.controllers;
 
 import com.ecommerce.project.ecommerce.dto.ProductDto;
-import com.ecommerce.project.ecommerce.service.ProductService;
+import com.ecommerce.project.ecommerce.services.ProductService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +23,7 @@ public class ProductController {
 
         return productDto;
     }
+
 
 
 
