@@ -4,6 +4,8 @@ import com.ecommerce.project.ecommerce.dto.ProductDto;
 import com.ecommerce.project.ecommerce.services.ProductService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/produto")
 public class ProductController {
@@ -20,6 +22,15 @@ public class ProductController {
         ProductDto response = productService.createProduct(productDto);
 
         return productDto;
+    }
+
+    @GetMapping
+    public List<ProductDto> listarProdutos(){
+
+        List<ProductDto> response = productService.getProducts();
+
+        return response;
+
     }
 
 

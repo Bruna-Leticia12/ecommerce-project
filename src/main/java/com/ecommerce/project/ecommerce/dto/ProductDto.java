@@ -12,6 +12,8 @@ public class ProductDto {
     private boolean ativo;
     private LocalDate data;
 
+    public ProductDto(){};
+
     public ProductDto(int id_categoria, String nome, double preco, int quantidade, String descricao, boolean ativo, LocalDate data) {
         this.id_categoria = id_categoria;
         this.nome = nome;
@@ -48,5 +50,33 @@ public class ProductDto {
 
     public int getId_categoria() {
         return id_categoria;
+    }
+
+    public void setId_categoria(int id_categoria) {
+        this.id_categoria = id_categoria;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setPreco(double preco) {
+        this.preco = preco;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public void setData(LocalDate data) {
+        this.data = data;
     }
 }
