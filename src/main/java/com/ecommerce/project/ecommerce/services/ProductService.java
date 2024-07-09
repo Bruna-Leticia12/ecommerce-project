@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,6 +50,23 @@ public class ProductService {
          }).collect(Collectors.toList());
 
          return  productDtos;
+    }
+
+    public ProductDto findyById(Integer id) {
+        Optional<ProductEntity> productEntity = productRepository.findById(id);
+
+        ProductDto productDto = new ProductDto();
+
+        productDto.setNome(productDto.getNome());
+        productDto.setPreco(productDto.getPreco());
+        productDto.setQuantidade(productDto.getQuantidade());
+        productDto.setDescricao(productDto.getDescricao());
+        productDto.setAtivo(productDto.isAtivo());
+        productDto.setData(productDto.getData());
+
+
+        return productDto;
+
     }
 
 }

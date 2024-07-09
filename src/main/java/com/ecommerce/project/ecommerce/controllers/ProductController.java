@@ -30,11 +30,15 @@ public class ProductController {
         List<ProductDto> response = productService.getProducts();
 
         return response;
-
     }
 
+    @GetMapping("/id")
+    public ProductDto getPorId(@RequestParam Integer id){
 
+        ProductDto response = productService.findyById(id);
 
+        return response;
+    }
 
 
 }
