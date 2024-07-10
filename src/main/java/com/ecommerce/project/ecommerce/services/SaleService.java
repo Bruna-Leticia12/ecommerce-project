@@ -1,7 +1,9 @@
 package com.ecommerce.project.ecommerce.services;
 
+import com.ecommerce.project.ecommerce.dto.ProductDto;
 import com.ecommerce.project.ecommerce.dto.SaleDto;
 import com.ecommerce.project.ecommerce.dto.request.SaleRequest;
+import com.ecommerce.project.ecommerce.entities.ProductEntity;
 import com.ecommerce.project.ecommerce.entities.SaleEntity;
 import com.ecommerce.project.ecommerce.enums.SaleStatus;
 import com.ecommerce.project.ecommerce.repositories.SaleRepository;
@@ -60,4 +62,17 @@ public class SaleService {
         return saleDtos;
     }
 
+    public SaleDto findById(Integer id) {
+        SaleEntity saleEntity = saleRepository.findById(id).get();
+
+        SaleDto saleDto = new SaleDto();
+
+        saleDto.setIdPedido(saleEntity.getIdPedido());
+        saleDto.setSaleStatus(saleEntity.getSaleStatus());
+        saleDto.setData(saleEntity.getData());
+        saleDto.setData_update(saleEntity.getData_update());
+
+        return saleDto;
+
+    }
 }

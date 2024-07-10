@@ -1,5 +1,6 @@
 package com.ecommerce.project.ecommerce.controllers;
 
+import com.ecommerce.project.ecommerce.dto.ProductDto;
 import com.ecommerce.project.ecommerce.dto.SaleDto;
 import com.ecommerce.project.ecommerce.dto.request.SaleRequest;
 import com.ecommerce.project.ecommerce.services.SaleService;
@@ -33,4 +34,11 @@ public class SaleController {
         return response;
     }
 
+    @GetMapping("/id")
+    public SaleDto getPorId(@RequestParam Integer id) {
+
+        SaleDto response = saleService.findById(id);
+
+        return response;
+    }
 }
