@@ -2,6 +2,7 @@ package com.ecommerce.project.ecommerce.services;
 
 import com.ecommerce.project.ecommerce.dto.ProductDto;
 import com.ecommerce.project.ecommerce.dto.SaleDto;
+import com.ecommerce.project.ecommerce.dto.request.ProductRequest;
 import com.ecommerce.project.ecommerce.dto.request.SaleRequest;
 import com.ecommerce.project.ecommerce.entities.ProductEntity;
 import com.ecommerce.project.ecommerce.entities.SaleEntity;
@@ -73,6 +74,28 @@ public class SaleService {
         saleDto.setData_update(saleEntity.getData_update());
 
         return saleDto;
-
     }
+
+    public String confirmSale(Integer id) {
+
+        SaleEntity existingSale = this.saleRepository.findById(id).get();
+
+        existingSale.setSaleStatus(SaleStatus.CONFIRMADA);
+
+        saleRepository.save(existingSale);
+
+        return "Venda Confirmada";
+    }
+
+    public String cancelSale(Integer id) {
+
+        SaleEntity existingSale = this.saleRepository.findById(id).get();
+
+        existingSale.setSaleStatus(SaleStatus.CANCELADA);
+
+        saleRepository.save(existingSale);
+
+        return "Venda Cancelada";
+    }
+
 }

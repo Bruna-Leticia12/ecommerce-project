@@ -2,6 +2,7 @@ package com.ecommerce.project.ecommerce.controllers;
 
 import com.ecommerce.project.ecommerce.dto.ProductDto;
 import com.ecommerce.project.ecommerce.dto.SaleDto;
+import com.ecommerce.project.ecommerce.dto.request.ProductRequest;
 import com.ecommerce.project.ecommerce.dto.request.SaleRequest;
 import com.ecommerce.project.ecommerce.services.SaleService;
 import org.springframework.web.bind.annotation.*;
@@ -41,4 +42,24 @@ public class SaleController {
 
         return response;
     }
+
+    @PatchMapping("/confirmacao")
+    public String confirmarVenda (@RequestParam Integer id) {
+
+        String response = saleService.confirmSale(id);
+
+        return response;
+    }
+
+    @PatchMapping("/cancelamento")
+    public String cancelarVenda (@RequestParam Integer id) {
+
+        String response = saleService.cancelSale(id);
+
+        return response;
+    }
+
+
+
+
 }
