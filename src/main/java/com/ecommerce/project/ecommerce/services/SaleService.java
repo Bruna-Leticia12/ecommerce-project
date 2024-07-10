@@ -98,4 +98,9 @@ public class SaleService {
         return "Venda Cancelada";
     }
 
+    public void deleteById(Integer id) {
+
+        saleRepository.deleteById(id);
+    }
+
 }

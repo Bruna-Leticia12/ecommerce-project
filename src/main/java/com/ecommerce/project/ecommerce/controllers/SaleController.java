@@ -59,7 +59,10 @@ public class SaleController {
         return response;
     }
 
-
+    @DeleteMapping
+    public void deletarVenda (@RequestParam Integer id){
+        saleService.deleteById(id);
+    }
 
 
 }
