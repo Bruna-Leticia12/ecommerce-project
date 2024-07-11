@@ -1,10 +1,13 @@
 package com.ecommerce.project.ecommerce.controllers;
 
 import com.ecommerce.project.ecommerce.entities.Order;
+import com.ecommerce.project.ecommerce.entities.User;
 import com.ecommerce.project.ecommerce.services.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -29,13 +32,22 @@ public class OrderController {
         return ResponseEntity.ok().body(obj);
     }
 
+    @PostMapping
+    public ResponseEntity<Order> insert(@RequestBody Order obj){
+        obj = orderService.insert(obj);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+        return ResponseEntity.created(uri).body(obj);
+    }
 
-//    @PostMapping
-//    public OrderDto inserirPedido (@RequestBody OrderDto orderDto){
-//
-//        OrderDto response = orderService.createOrder(orderDto);
-//
-//        return orderDto;
-//    }
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        orderService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Order> update(@PathVariable Long id, @RequestBody Order obj){
+        obj = orderService.update(id, obj);
+        return ResponseEntity.ok().body(obj);
+    }
 }
