@@ -8,9 +8,11 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+
 
 @Service
 public class UserService {
@@ -21,32 +23,37 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public User findById(Long id) {
-        Optional<User> user = userRepository.findById(id);
-        return user.orElseThrow(() -> new ResourceNotFoundException(id));
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
     }
 
-    public User insert(User obj){
-            return userRepository.save(obj);
+    @Transactional
+    public User insert(User obj) {
+        return userRepository.save(obj);
     }
 
-    public void delete(Long id){
+    @Transactional
+    public void delete(Long id) {
         try {
             userRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException(id);
-        }catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new DatabaseException(e.getMessage());
         }
     }
 
-    public User update(Long id, User obj){
+    @Transactional
+    public User update(Long id, User obj) {
         try {
-            User entity = userRepository.getReferenceById(id);
+            User entity = userRepository.getOne(id);
             updateData(entity, obj);
             return userRepository.save(entity);
         } catch (EntityNotFoundException e) {

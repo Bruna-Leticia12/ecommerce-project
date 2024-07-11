@@ -5,6 +5,7 @@ import com.ecommerce.project.ecommerce.repositories.CategoryRepository;
 import com.ecommerce.project.ecommerce.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,22 +19,26 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<Category> findALL(){
+    @Transactional(readOnly = true)
+    public List<Category> findAll() {
         return categoryRepository.findAll();
     }
 
-    public Category findById(Long id){
-        Optional<Category> category = categoryRepository.findById(id);
-        return category.get();
+    @Transactional(readOnly = true)
+    public Category findById(Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id " + id));
     }
 
-    public Category insert(Category obj){
+    @Transactional
+    public Category insert(Category obj) {
         return categoryRepository.save(obj);
     }
 
-    public Category update(Long id, Category obj){
+    @Transactional
+    public Category update(Long id, Category obj) {
         try {
-            Category entity = categoryRepository.getReferenceById(id);
+            Category entity = categoryRepository.getOne(id);
             updateData(entity, obj);
             return categoryRepository.save(entity);
         } catch (EntityNotFoundException e) {

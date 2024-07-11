@@ -34,6 +34,10 @@ public class Order implements Serializable {
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Sale sale;
 
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
     public Order() {}
 
     public Order(Long id, Instant shippingDate, Integer saleStatus, User client) {

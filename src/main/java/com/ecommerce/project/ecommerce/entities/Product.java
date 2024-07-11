@@ -7,9 +7,7 @@ import jakarta.validation.constraints.Positive;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "tb_product")
@@ -39,6 +37,9 @@ public class Product implements Serializable {
 
     @OneToMany(mappedBy = "product")
     private Set<SaleItem> saleItems = new HashSet<>();
+
+    @OneToMany(mappedBy = "product")
+    private List<Order> orders = new ArrayList<>();
 
     public Product() {}
 
@@ -91,6 +92,14 @@ public class Product implements Serializable {
 
     public Set<Category> getCategories() {
         return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 
     public boolean isActive() {

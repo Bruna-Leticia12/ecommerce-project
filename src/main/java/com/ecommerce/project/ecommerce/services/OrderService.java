@@ -8,6 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,19 +22,23 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public List<Order> findALL() {
+    @Transactional(readOnly = true)
+    public List<Order> findAll() {
         return orderRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Order findById(Long id) {
-        Optional<Order> order = orderRepository.findById(id);
-        return order.get();
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + id));
     }
 
+    @Transactional
     public Order insert(Order obj) {
         return orderRepository.save(obj);
     }
 
+    @Transactional
     public void delete(Long id) {
         try {
             orderRepository.deleteById(id);
@@ -44,9 +49,10 @@ public class OrderService {
         }
     }
 
+    @Transactional
     public Order update(Long id, Order obj) {
         try {
-            Order entity = orderRepository.getReferenceById(id);
+            Order entity = orderRepository.getOne(id);
             updateData(entity, obj);
             return orderRepository.save(entity);
         } catch (EntityNotFoundException e) {
