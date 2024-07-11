@@ -1,93 +1,61 @@
 package com.ecommerce.project.ecommerce.services;
 
+import com.ecommerce.project.ecommerce.entities.Sale;
+import com.ecommerce.project.ecommerce.repositories.SaleRepository;
+import com.ecommerce.project.ecommerce.services.exceptions.DatabaseException;
+import com.ecommerce.project.ecommerce.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SaleService {
 
-//    private SaleRepository saleRepository;
-//
-//    public SaleService(SaleRepository saleRepository) {
-//        this.saleRepository = saleRepository;
-//    }
-//
-//    public SaleDto createSale(SaleRequest saleRequest) {
-//
-//        LocalDate date = LocalDate.now();
-//        SaleEntity saleEntity = new SaleEntity();
-//
-//        saleEntity.setIdPedido(saleRequest.getIdPedido());
-//        saleEntity.setSaleStatus(SaleStatus.PROCESSANDO);
-//        saleEntity.setData(date);
-//        saleEntity.setData_update(date);
-//
-//        saleRepository.save(saleEntity);
-//
-//        SaleDto saleDto = new SaleDto(
-//                saleEntity.getIdPedido(),
-//                saleEntity.getSaleStatus(),
-//                saleEntity.getData(),
-//                saleEntity.getData_update());
-//
-//        return saleDto;
-//    }
-//
-//    public List<SaleDto> getAllSales() {
-//
-//        List<SaleEntity> saleEntities = saleRepository.findAll();
-//        List<SaleDto> saleDtos = saleEntities.stream().map(elemento -> {
-//            SaleDto saleDto = new SaleDto();
-//
-//            saleDto.setIdPedido(elemento.getIdPedido());
-//            saleDto.setSaleStatus(elemento.getSaleStatus());
-//            saleDto.setData(elemento.getData());
-//            saleDto.setData_update(elemento.getData_update());
-//
-//            return saleDto;
-//
-//        }).collect(Collectors.toList());
-//
-//        return saleDtos;
-//    }
-//
-//    public SaleDto findById(Integer id) {
-//        SaleEntity saleEntity = saleRepository.findById(id).get();
-//
-//        SaleDto saleDto = new SaleDto();
-//
-//        saleDto.setIdPedido(saleEntity.getIdPedido());
-//        saleDto.setSaleStatus(saleEntity.getSaleStatus());
-//        saleDto.setData(saleEntity.getData());
-//        saleDto.setData_update(saleEntity.getData_update());
-//
-//        return saleDto;
-//    }
-//
-//    public String confirmSale(Integer id) {
-//
-//        SaleEntity existingSale = this.saleRepository.findById(id).get();
-//
-//        existingSale.setSaleStatus(SaleStatus.CONFIRMADA);
-//
-//        saleRepository.save(existingSale);
-//
-//        return "Venda Confirmada";
-//    }
-//
-//    public String cancelSale(Integer id) {
-//
-//        SaleEntity existingSale = this.saleRepository.findById(id).get();
-//
-//        existingSale.setSaleStatus(SaleStatus.CANCELADA);
-//
-//        saleRepository.save(existingSale);
-//
-//        return "Venda Cancelada";
-//    }
-//
-//    public void deleteById(Integer id) {
-//
-//        saleRepository.deleteById(id);
-//    }
+    private SaleRepository saleRepository;
 
+    public SaleService(SaleRepository saleRepository) {
+        this.saleRepository = saleRepository;
+    }
+
+    public List<Sale> findAll() {
+        return saleRepository.findAll();
+    }
+
+    public Sale findById(Long id) {
+        Optional<Sale> sale = saleRepository.findById(id);
+        return sale.orElseThrow(() -> new ResourceNotFoundException(id));
+    }
+
+    public Sale insert(Sale obj){
+        return saleRepository.save(obj);
+    }
+
+    public void delete(Long id){
+        try {
+            saleRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException(id);
+        }catch (DataIntegrityViolationException e){
+            throw new DatabaseException(e.getMessage());
+        }
+    }
+
+    public Sale update(Long id, Sale obj){
+        try {
+            Sale entity = saleRepository.getReferenceById(id);
+            updateData(entity, obj);
+            return saleRepository.save(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
+    }
+
+    private void updateData(Sale entity, Sale obj) {
+        entity.setSaleDateUpdate(obj.getSaleDate());
+        entity.setSaleStatus(obj.getSaleStatus());
+    }
 }

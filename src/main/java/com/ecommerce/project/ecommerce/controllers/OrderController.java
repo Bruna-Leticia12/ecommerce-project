@@ -1,7 +1,6 @@
 package com.ecommerce.project.ecommerce.controllers;
 
 import com.ecommerce.project.ecommerce.entities.Order;
-import com.ecommerce.project.ecommerce.entities.User;
 import com.ecommerce.project.ecommerce.services.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

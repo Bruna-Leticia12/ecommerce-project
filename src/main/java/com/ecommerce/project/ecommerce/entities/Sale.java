@@ -18,9 +18,11 @@ public class Sale implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant saleDate;
+    private Integer saleStatus;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+    private Instant saleDateUpdate;
 
     @JsonIgnore
     @OneToOne
@@ -30,9 +32,10 @@ public class Sale implements Serializable {
     public Sale() {
     }
 
-    public Sale(Long id, Instant saleDate, Order order) {
+    public Sale(Long id, Instant saleDate,Integer saleStatus, Order order) {
         this.id = id;
         this.saleDate = saleDate;
+        this.saleStatus = saleStatus;
         this.order = order;
     }
 
@@ -52,12 +55,28 @@ public class Sale implements Serializable {
         this.saleDate = saleDate;
     }
 
+    public Integer getSaleStatus() {
+        return saleStatus;
+    }
+
+    public void setSaleStatus(Integer saleStatus) {
+        this.saleStatus = saleStatus;
+    }
+
     public Order getOrder() {
         return order;
     }
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public Instant getSaleDateUpdate() {
+        return saleDateUpdate;
+    }
+
+    public void setSaleDateUpdate(Instant saleDateUpdate) {
+        this.saleDateUpdate = saleDateUpdate;
     }
 
     @Override

@@ -20,10 +20,7 @@ public class SaleItem implements Serializable {
     private Integer quantity;
     private Double price;
 
-    public SaleItem() {
-    }
-
-    ;
+    public SaleItem() {}
 
     public SaleItem(Order order, Product product, Integer quantity, Double price) {
         super();
@@ -82,5 +79,4 @@ public class SaleItem implements Serializable {
     public int hashCode() {
         return Objects.hashCode(id);
     }
-
 }

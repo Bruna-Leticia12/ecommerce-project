@@ -61,5 +61,4 @@ public class StandarError implements Serializable {
     public void setPath(String path) {
         this.path = path;
     }
-
 }

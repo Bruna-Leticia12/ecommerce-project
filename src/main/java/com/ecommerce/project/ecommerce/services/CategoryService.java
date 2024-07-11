@@ -1,19 +1,11 @@
 package com.ecommerce.project.ecommerce.services;
 
 import com.ecommerce.project.ecommerce.entities.Category;
-import com.ecommerce.project.ecommerce.entities.User;
 import com.ecommerce.project.ecommerce.repositories.CategoryRepository;
-import com.ecommerce.project.ecommerce.services.exceptions.DatabaseException;
 import com.ecommerce.project.ecommerce.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 

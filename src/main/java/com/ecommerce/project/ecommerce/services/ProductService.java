@@ -1,13 +1,10 @@
 package com.ecommerce.project.ecommerce.services;
 
 import com.ecommerce.project.ecommerce.entities.Product;
-import com.ecommerce.project.ecommerce.entities.User;
 import com.ecommerce.project.ecommerce.repositories.ProductRepository;
-import com.ecommerce.project.ecommerce.services.exceptions.DatabaseException;
 import com.ecommerce.project.ecommerce.services.exceptions.NoSuchElementCustomException;
 import com.ecommerce.project.ecommerce.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
