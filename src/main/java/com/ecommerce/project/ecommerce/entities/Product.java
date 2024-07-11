@@ -2,6 +2,8 @@ package com.ecommerce.project.ecommerce.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -18,9 +20,13 @@ public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank(message = "Name is required")
     private String name;
     private String description;
+    @Positive(message = "Price must be positive")
     private double price;
+    private int stockQuantity;
+    private boolean active = true;
 
     @ManyToMany
     @JoinTable(name = "product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
@@ -72,6 +78,34 @@ public class Product implements Serializable {
 
     public Set<Category> getCategories() {
         return categories;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public int getStockQuantity() {
+        return stockQuantity;
+    }
+
+    public void setStockQuantity(int stockQuantity) {
+        this.stockQuantity = stockQuantity;
+    }
+
+    public boolean hasEnoughStock(int quantity) {
+        return this.stockQuantity >= quantity;
+    }
+
+    public void decreaseStock(int quantity) {
+        if (hasEnoughStock(quantity)) {
+            this.stockQuantity -= quantity;
+        } else {
+            throw new RuntimeException("Insufficient stock");
+        }
     }
 
     @JsonIgnore
