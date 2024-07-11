@@ -12,6 +12,10 @@ public class OrderService {
 
     private OrderRepository orderRepository;
 
+    public OrderService(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
+
     public List<Order> findALL(){
         return orderRepository.findAll();
     }
@@ -23,10 +27,7 @@ public class OrderService {
 
 
 
-//    public OrderService(OrderRepository orderRepository) {
-//        this.orderRepository = orderRepository;
-//    }
-//
+
 //    public OrderDto createOrder(OrderDto orderDto){
 //
 //        OrderEntity orderEntity = new OrderEntity();

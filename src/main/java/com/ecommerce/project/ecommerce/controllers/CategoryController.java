@@ -17,6 +17,10 @@ public class CategoryController {
 
     private CategoryService categoryService;
 
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+
     @GetMapping
     public ResponseEntity<List<Category>> findAll(){
         List<Category> list = categoryService.findALL();
@@ -28,11 +32,6 @@ public class CategoryController {
         Category obj = categoryService.findById(id);
         return ResponseEntity.ok().body(obj);
     }
-
-
-//    public OrderController(OrderService orderService){
-//        this.orderService = orderService;
-//    }
 
 
 

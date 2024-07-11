@@ -21,7 +21,6 @@ public class Product implements Serializable {
     private String name;
     private String description;
     private double price;
-    private String imgUrl;
 
     @ManyToMany
     @JoinTable(name = "product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
@@ -32,12 +31,11 @@ public class Product implements Serializable {
 
     public Product(){}
 
-    public Product(Long id, String name, String description, double price, String imgUrl) {
+    public Product(Long id, String name, String description, double price) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.imgUrl = imgUrl;
     }
 
     public Long getId() {
@@ -70,14 +68,6 @@ public class Product implements Serializable {
 
     public void setPrice(double price) {
         this.price = price;
-    }
-
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
     }
 
     public Set<Category> getCategories() {

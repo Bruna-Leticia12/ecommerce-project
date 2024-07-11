@@ -13,6 +13,10 @@ public class OrderController {
 
     private OrderService orderService;
 
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @GetMapping
     public ResponseEntity<List<Order>> findAll(){
         List<Order> list = orderService.findALL();
@@ -24,10 +28,6 @@ public class OrderController {
         Order obj = orderService.findById(id);
         return ResponseEntity.ok().body(obj);
     }
-
-//    public OrderController(OrderService orderService){
-//        this.orderService = orderService;
-//    }
 
 
 //    @PostMapping
