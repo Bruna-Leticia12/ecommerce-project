@@ -12,6 +12,9 @@ import java.util.Objects;
 @Embeddable
 public class SaleItemPK implements Serializable {
 
+    private Long order_id;
+    private Long product_id;
+
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
@@ -19,6 +22,30 @@ public class SaleItemPK implements Serializable {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
+    public SaleItemPK() {
+    }
+
+    public SaleItemPK(Long order_id, Long product_id) {
+        this.order_id = order_id;
+        this.product_id = product_id;
+    }
+
+    public Long getOrder_id() {
+        return order_id;
+    }
+
+    public void setOrder_id(Long order_id) {
+        this.order_id = order_id;
+    }
+
+    public Long getProduct_id() {
+        return product_id;
+    }
+
+    public void setProduct_id(Long product_id) {
+        this.product_id = product_id;
+    }
 
     public Order getOrder() {
         return order;

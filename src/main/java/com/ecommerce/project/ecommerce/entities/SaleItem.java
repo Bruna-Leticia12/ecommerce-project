@@ -20,31 +20,36 @@ public class SaleItem implements Serializable {
     private Integer quantity;
     private Double price;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("order_id")
+    @JoinColumn(name = "order_id", insertable = false, updatable = false)
+    private Order order;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("product_id")
+    @JoinColumn(name = "product_id", insertable = false, updatable = false)
+    private Product product;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sale_id")
+    private Sale sale;
+
     public SaleItem() {}
 
-    public SaleItem(Order order, Product product, Integer quantity, Double price) {
-        super();
-        id.setOrder(order);
-        id.setProduct(product);
+    public SaleItem(Order order, Product product, int quantity, double price) {
+        this.order = order;
+        this.product = product;
         this.quantity = quantity;
         this.price = price;
+        this.id = new SaleItemPK(order.getId(), product.getId());
     }
 
-    @JsonIgnore
-    public Order getOrder() {
-        return id.getOrder();
+    public SaleItemPK getId() {
+        return id;
     }
 
-    public void setOrder(Order order) {
-        id.setOrder(order);
-    }
-
-    public Product getProduct() {
-        return id.getProduct();
-    }
-
-    public void setProduct(Product product) {
-        id.setProduct(product);
+    public void setId(SaleItemPK id) {
+        this.id = id;
     }
 
     public Integer getQuantity() {
@@ -63,20 +68,53 @@ public class SaleItem implements Serializable {
         this.price = price;
     }
 
+    @JsonIgnore
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+        if (id == null) {
+            id = new SaleItemPK();
+        }
+        id.setOrder_id(order.getId());
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+        if (id == null) {
+            id = new SaleItemPK();
+        }
+        id.setProduct_id(product.getId());
+    }
+
+    public double getSubTotal() {
+        return price * quantity;
+    }
+
+    public Sale getSale() {
+        return sale;
+    }
+
+    public void setSale(Sale sale) {
+        this.sale = sale;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SaleItem that = (SaleItem) o;
-        return Objects.equals(id, that.id);
-    }
-
-    public Double getSubTotal() {
-        return price * quantity;
+        SaleItem saleItem = (SaleItem) o;
+        return Objects.equals(id, saleItem.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hash(id);
     }
 }

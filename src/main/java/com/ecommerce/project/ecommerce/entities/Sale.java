@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -18,25 +20,30 @@ public class Sale implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant saleDate;
+
     private Integer saleStatus;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant saleDateUpdate;
+
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<SaleItem> items = new ArrayList<>();
 
     @JsonIgnore
     @OneToOne
     @MapsId
     private Order order;
 
-    public Sale() {
-    }
+    public Sale() {}
 
-    public Sale(Long id, Instant saleDate,Integer saleStatus, Order order) {
+    public Sale(Long id, Instant saleDate, Integer saleStatus, Instant saleDateUpdate) {
         this.id = id;
         this.saleDate = saleDate;
         this.saleStatus = saleStatus;
-        this.order = order;
+        this.saleDateUpdate = saleDateUpdate;
     }
 
     public Long getId() {
@@ -63,20 +70,28 @@ public class Sale implements Serializable {
         this.saleStatus = saleStatus;
     }
 
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
-    }
-
     public Instant getSaleDateUpdate() {
         return saleDateUpdate;
     }
 
     public void setSaleDateUpdate(Instant saleDateUpdate) {
         this.saleDateUpdate = saleDateUpdate;
+    }
+
+    public List<SaleItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<SaleItem> items) {
+        this.items = items;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     @Override
@@ -89,6 +104,6 @@ public class Sale implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hash(id);
     }
 }

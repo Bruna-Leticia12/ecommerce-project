@@ -20,22 +20,27 @@ public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotBlank(message = "Name is required")
     private String name;
+
     private String description;
+
     @Positive(message = "Price must be positive")
     private double price;
+
     private int stockQuantity;
+
     private boolean active = true;
 
     @ManyToMany
     @JoinTable(name = "product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
 
-    @OneToMany(mappedBy = "id.product" )
-    private Set<SaleItem> items = new HashSet<>();
+    @OneToMany(mappedBy = "product")
+    private Set<SaleItem> saleItems = new HashSet<>();
 
-    public Product(){}
+    public Product() {}
 
     public Product(Long id, String name, String description, double price) {
         this.id = id;
@@ -76,6 +81,14 @@ public class Product implements Serializable {
         this.price = price;
     }
 
+    public Set<SaleItem> getSaleItems() {
+        return saleItems;
+    }
+
+    public void setSaleItems(Set<SaleItem> saleItems) {
+        this.saleItems = saleItems;
+    }
+
     public Set<Category> getCategories() {
         return categories;
     }
@@ -111,7 +124,7 @@ public class Product implements Serializable {
     @JsonIgnore
     public Set<Order> getOrder() {
         Set<Order> set = new HashSet<>();
-        for(SaleItem saleItem : items){
+        for (SaleItem saleItem : saleItems) {
             set.add(saleItem.getOrder());
         }
         return set;
@@ -127,6 +140,6 @@ public class Product implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hash(id);
     }
 }

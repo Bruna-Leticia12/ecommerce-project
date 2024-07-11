@@ -1,13 +1,11 @@
 package com.ecommerce.project.ecommerce.entities;
 
-import com.ecommerce.project.ecommerce.enums.SaleStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -27,25 +25,25 @@ public class Order implements Serializable {
     private Integer saleStatus;
 
     @ManyToOne
-    @JoinColumn(name = "client_id")
+    @JoinColumn(name = "client_id", referencedColumnName = "id")
     private User client;
 
-    @OneToMany(mappedBy = "id.order" )
-    private Set<SaleItem> items = new HashSet<>();
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private Set<SaleItem> items;
 
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Sale sale;
 
-    public Order(){};
+    public Order() {}
 
-    public Order(Long id, Instant shippingDate, SaleStatus saleStatus, User client) {
+    public Order(Long id, Instant shippingDate, Integer saleStatus, User client) {
         this.id = id;
         this.shippingDate = shippingDate;
-        setSaleStatus(saleStatus);
+        this.saleStatus = saleStatus;
         this.client = client;
     }
 
-    public Long getId(){
+    public Long getId() {
         return id;
     }
 
@@ -69,14 +67,20 @@ public class Order implements Serializable {
         this.client = client;
     }
 
-    public SaleStatus getSaleStatus() {
-        return SaleStatus.valueOf(saleStatus);
+    public Integer getSaleStatus() {
+        return saleStatus;
     }
 
-    public void setSaleStatus(SaleStatus saleStatus) {
-        if(saleStatus != null) {
-            this.saleStatus = saleStatus.getCode();
-        }
+    public void setSaleStatus(Integer saleStatus) {
+        this.saleStatus = saleStatus;
+    }
+
+    public Set<SaleItem> getItems() {
+        return items;
+    }
+
+    public void setItems(Set<SaleItem> items) {
+        this.items = items;
     }
 
     public Sale getSale() {
@@ -87,14 +91,10 @@ public class Order implements Serializable {
         this.sale = sale;
     }
 
-    public Set<SaleItem> getItems(){
-        return items;
-    }
-
     public Double getTotal() {
         double sum = 0.0;
-        for(SaleItem x : items){
-            sum += x.getSubTotal();
+        for (SaleItem item : items) {
+            sum += item.getSubTotal();
         }
         return sum;
     }
@@ -109,6 +109,6 @@ public class Order implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hash(id);
     }
 }
