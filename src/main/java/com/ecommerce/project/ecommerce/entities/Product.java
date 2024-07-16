@@ -35,10 +35,10 @@ public class Product implements Serializable {
 //    @ManyToMany
 //    @JoinTable(name = "product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
 //    private Set<Category> categories = new HashSet<>();
-//
-//    @OneToMany(mappedBy = "product")
-//    private Set<SaleItem> saleItems = new HashSet<>();
-//
+
+    @OneToMany(mappedBy = "id.product")
+    private Set<SaleItem> items = new HashSet<>();
+
 //    @OneToMany(mappedBy = "product")
 //    private List<Order> orders = new ArrayList<>();
 //
@@ -94,6 +94,15 @@ public class Product implements Serializable {
         this.stockQuantity = stockQuantity;
     }
 
+    @JsonIgnore
+    public Set<Sale> getSales() {
+        Set<Sale> set = new HashSet<>();
+        for (SaleItem x : items) {
+            set.add(x.getSale());
+        }
+        return set;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -108,9 +117,7 @@ public class Product implements Serializable {
     }
 }
 
-//    public Set<SaleItem> getSaleItems() {
-//        return saleItems;
-//    }
+
 //
 //    public void setSaleItems(Set<SaleItem> saleItems) {
 //        this.saleItems = saleItems;
