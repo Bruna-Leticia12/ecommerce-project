@@ -1,5 +1,6 @@
 package com.ecommerce.project.ecommerce.entities;
 
+import com.ecommerce.project.ecommerce.enums.SaleStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -24,6 +25,8 @@ public class Sale implements Serializable {
    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant saleDate;
 
+   private Integer saleStatus;
+
     @ManyToOne
     @JoinColumn(name = "client_id")
     private User client;
@@ -31,9 +34,10 @@ public class Sale implements Serializable {
     public Sale() {
     }
 
-    public Sale(Long id, Instant saleDate, User client) {
+    public Sale(Long id, Instant saleDate, SaleStatus saleStatus, User client) {
         this.id = id;
         this.saleDate = saleDate;
+        setSaleStatus(saleStatus);
         this.client = client;
     }
 
@@ -51,6 +55,16 @@ public class Sale implements Serializable {
 
     public void setSaleDate(Instant saleDate) {
         this.saleDate = saleDate;
+    }
+
+    public SaleStatus getSaleStatus() {
+        return SaleStatus.valueOf(saleStatus);
+    }
+
+    public void setSaleStatus(SaleStatus saleStatus) {
+        if (saleStatus != null) {
+            this.saleStatus = saleStatus.getCode();
+        }
     }
 
     public User getClient() {
