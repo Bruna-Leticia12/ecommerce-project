@@ -1,6 +1,6 @@
 package com.ecommerce.project.ecommerce.entities.pk;
 
-import com.ecommerce.project.ecommerce.entities.Order;
+//import com.ecommerce.project.ecommerce.entities.Order;
 import com.ecommerce.project.ecommerce.entities.Product;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;

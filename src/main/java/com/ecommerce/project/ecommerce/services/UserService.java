@@ -17,20 +17,26 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-//    private UserRepository userRepository;
-//
-//    public UserService(UserRepository userRepository) {
-//        this.userRepository = userRepository;
-//    }
-//
+    private UserRepository repository;
+
+    public UserService(UserRepository userRepository) {
+        this.repository = userRepository;
+    }
+
 //    @Transactional(readOnly = true)
-//    public List<User> findAll() {
-//        return userRepository.findAll();
-//    }
-//
+    public List<User> findAll() {
+        return repository.findAll();
+    }
+
+
+    public User findById(Long id) {
+        Optional<User> obj = repository.findById(id);
+        return obj.get();
+    }
+
 //    @Transactional(readOnly = true)
 //    public User findById(Long id) {
-//        return userRepository.findById(id)
+//        return repository.findById(id)
 //                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
 //    }
 //

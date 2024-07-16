@@ -2,85 +2,82 @@
 //
 //import com.ecommerce.project.ecommerce.entities.Sale;
 //import com.ecommerce.project.ecommerce.repositories.SaleRepository;
+//import org.springframework.stereotype.Service;
+//import com.ecommerce.project.ecommerce.entities.User;
+//
 //import com.ecommerce.project.ecommerce.services.exceptions.DatabaseException;
 //import com.ecommerce.project.ecommerce.services.exceptions.ResourceNotFoundException;
 //import jakarta.persistence.EntityNotFoundException;
 //import org.springframework.dao.DataIntegrityViolationException;
 //import org.springframework.dao.EmptyResultDataAccessException;
-//import org.springframework.stereotype.Service;
+//
 //import org.springframework.transaction.annotation.Transactional;
 //
-//import java.time.DayOfWeek;
-//import java.time.Instant;
-//import java.time.LocalDateTime;
-//import java.time.ZoneId;
-//import java.time.temporal.TemporalAdjusters;
 //import java.util.List;
 //import java.util.Optional;
 //
 //@Service
 //public class SaleService {
-
-//    private SaleRepository saleRepository;
 //
-//    public SaleService(SaleRepository saleRepository) {
-//        this.saleRepository = saleRepository;
-//    }
+//    private SaleRepository repository;
 //
-//    @Transactional(readOnly = true)
 //    public List<Sale> findAll() {
-//        return saleRepository.findAll();
+//        return repository.findAll();
 //    }
 //
-//    @Transactional(readOnly = true)
+//    public SaleService(SaleRepository repository) {
+//        this.repository = repository;
+//    }
+//
 //    public Sale findById(Long id) {
-//        return saleRepository.findById(id)
-//                .orElseThrow(() -> new ResourceNotFoundException("Sale not found with id " + id));
+//        Optional<Sale> obj = repository.findById(id);
+//        return obj.get();
 //    }
 //
-//    @Transactional
-//    public Sale insert(Sale obj) {
-//        return saleRepository.save(obj);
-//    }
+////    @Transactional(readOnly = true)
+////
+////
+////
+////
+////    @Transactional(readOnly = true)
+////    public Sale findById(Long id) {
+////        Optional<Sale> obj = repository.findById(id);
+////        return obj.get();
+//////        return repository.findById(id)
+//////                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + id));
+////    }
 //
-//    @Transactional
-//    public void delete(Long id) {
-//        Sale sale = findById(id);
-//        saleRepository.delete(sale);
-//    }
 //
-//    @Transactional
-//    public Sale update(Long id, Sale obj) {
-//        Sale entity = findById(id);
-//        updateData(entity, obj);
-//        return saleRepository.save(entity);
-//    }
-//
-//    private void updateData(Sale entity, Sale obj) {
-//        entity.setSaleDateUpdate(obj.getSaleDateUpdate());
-//        entity.setSaleStatus(obj.getSaleStatus());
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public List<Sale> findBySaleDateBetween(Instant startDate, Instant endDate) {
-//        return saleRepository.findBySaleDateBetween(startDate, endDate);
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public List<Sale> generateMonthlySalesReport() {
-//        LocalDateTime now = LocalDateTime.now();
-//        LocalDateTime firstDayOfMonth = now.with(TemporalAdjusters.firstDayOfMonth()).withHour(0).withMinute(0).withSecond(0).withNano(0);
-//        LocalDateTime lastDayOfMonth = now.with(TemporalAdjusters.lastDayOfMonth()).withHour(23).withMinute(59).withSecond(59).withNano(999);
-//        return findBySaleDateBetween(firstDayOfMonth.atZone(ZoneId.systemDefault()).toInstant(),
-//                lastDayOfMonth.atZone(ZoneId.systemDefault()).toInstant());
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public List<Sale> generateWeeklySalesReport() {
-//        LocalDateTime now = LocalDateTime.now();
-//        LocalDateTime firstDayOfWeek = now.with(DayOfWeek.MONDAY).withHour(0).withMinute(0).withSecond(0).withNano(0);
-//        LocalDateTime lastDayOfWeek = now.with(DayOfWeek.SUNDAY).withHour(23).withMinute(59).withSecond(59).withNano(999);
-//        return findBySaleDateBetween(firstDayOfWeek.atZone(ZoneId.systemDefault()).toInstant(),
-//                lastDayOfWeek.atZone(ZoneId.systemDefault()).toInstant());
-//    }
+////
+////    @Transactional
+////    public Sale insert(Sale obj) {
+////        return saleRepository.save(obj);
+////    }
+////
+////    @Transactional
+////    public void delete(Long id) {
+////        try {
+////            saleRepository.deleteById(id);
+////        } catch (EmptyResultDataAccessException e) {
+////            throw new ResourceNotFoundException(id);
+////        } catch (DataIntegrityViolationException e) {
+////            throw new DatabaseException(e.getMessage());
+////        }
+////    }
+////
+////    @Transactional
+////    public Sale update(Long id, Sale obj) {
+////        try {
+////            Sale entity = saleRepository.getOne(id);
+////            updateData(entity, obj);
+////            return saleRepository.save(entity);
+////        } catch (EntityNotFoundException e) {
+////            throw new ResourceNotFoundException(id);
+////        }
+////    }
+////
+////    private void updateData(Sale entity, Sale obj) {
+////        entity.setSaleDate(obj.getSaleDate());
+////        entity.setSaleStatus(obj.getSaleStatus());
+////    }
 //}

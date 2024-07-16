@@ -20,30 +20,21 @@ public class Sale implements Serializable {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    private Long id;
-//
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+//    //
+////    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
 //    private Instant saleDate;
 //
-//    private Integer saleStatus;
+//    @ManyToOne
+//    @JoinColumn(name = "client_id")
+//    private User client;
 //
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
-//    private Instant saleDateUpdate;
+//    public Sale() {
+//    }
 //
-//    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<SaleItem> items = new ArrayList<>();
-//
-//    @JsonIgnore
-//    @OneToOne
-//    @MapsId
-//    private Order order;
-//
-//    public Sale() {}
-//
-//    public Sale(Long id, Instant saleDate, Integer saleStatus, Instant saleDateUpdate) {
+//    public Sale(Long id, Instant saleDate, User client) {
 //        this.id = id;
 //        this.saleDate = saleDate;
-//        this.saleStatus = saleStatus;
-//        this.saleDateUpdate = saleDateUpdate;
+//        this.client = client;
 //    }
 //
 //    public Long getId() {
@@ -62,36 +53,12 @@ public class Sale implements Serializable {
 //        this.saleDate = saleDate;
 //    }
 //
-//    public Integer getSaleStatus() {
-//        return saleStatus;
+//    public User getClient() {
+//        return client;
 //    }
 //
-//    public void setSaleStatus(Integer saleStatus) {
-//        this.saleStatus = saleStatus;
-//    }
-//
-//    public Instant getSaleDateUpdate() {
-//        return saleDateUpdate;
-//    }
-//
-//    public void setSaleDateUpdate(Instant saleDateUpdate) {
-//        this.saleDateUpdate = saleDateUpdate;
-//    }
-//
-//    public List<SaleItem> getItems() {
-//        return items;
-//    }
-//
-//    public void setItems(List<SaleItem> items) {
-//        this.items = items;
-//    }
-//
-//    public Order getOrder() {
-//        return order;
-//    }
-//
-//    public void setOrder(Order order) {
-//        this.order = order;
+//    public void setClient(User client) {
+//        this.client = client;
 //    }
 //
 //    @Override
@@ -100,6 +67,101 @@ public class Sale implements Serializable {
 //        if (o == null || getClass() != o.getClass()) return false;
 //        Sale sale = (Sale) o;
 //        return Objects.equals(id, sale.id);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hashCode(id);
+//    }
+//}
+
+//        private Integer saleStatus;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "client_id", referencedColumnName = "id")
+//    private User client;
+//
+//    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+//    private Set<SaleItem> items;
+//
+//    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+//    private Sale sale;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "product_id")
+//    private Product product;
+//
+//    public Order() {}
+//
+//    public Order(Long id, Instant shippingDate, Integer saleStatus, User client) {
+//        this.id = id;
+//        this.shippingDate = shippingDate;
+//        this.saleStatus = saleStatus;
+//        this.client = client;
+//    }
+//
+//    public Long getId() {
+//        return id;
+//    }
+//
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
+//
+//    public Instant getShippingDate() {
+//        return shippingDate;
+//    }
+//
+//    public void setShippingDate(Instant shippingDate) {
+//        this.shippingDate = shippingDate;
+//    }
+//
+//    public User getClient() {
+//        return client;
+//    }
+//
+//    public void setClient(User client) {
+//        this.client = client;
+//    }
+//
+//    public Integer getSaleStatus() {
+//        return saleStatus;
+//    }
+//
+//    public void setSaleStatus(Integer saleStatus) {
+//        this.saleStatus = saleStatus;
+//    }
+//
+//    public Set<SaleItem> getItems() {
+//        return items;
+//    }
+//
+//    public void setItems(Set<SaleItem> items) {
+//        this.items = items;
+//    }
+//
+//    public Sale getSale() {
+//        return sale;
+//    }
+//
+//    public void setSale(Sale sale) {
+//        this.sale = sale;
+//    }
+//
+//    public Double getTotal() {
+//        double sum = 0.0;
+//        for (SaleItem item : items) {
+//            sum += item.getSubTotal();
+//        }
+//        return sum;
+//    }
+//
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        Order order = (Order) o;
+//        return Objects.equals(id, order.id);
 //    }
 //
 //    @Override

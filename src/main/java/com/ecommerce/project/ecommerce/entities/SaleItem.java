@@ -1,16 +1,16 @@
-package com.ecommerce.project.ecommerce.entities;
-
-import com.ecommerce.project.ecommerce.entities.pk.SaleItemPK;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.Objects;
+//package com.ecommerce.project.ecommerce.entities;
+//
+//import com.ecommerce.project.ecommerce.entities.pk.SaleItemPK;
+//import com.fasterxml.jackson.annotation.JsonIgnore;
+//import jakarta.persistence.*;
+//
+//import java.io.Serial;
+//import java.io.Serializable;
+//import java.util.Objects;
 //
 //@Entity
 //@Table(name = "tb_sale_item")
-public class SaleItem implements Serializable {
+//public class SaleItem implements Serializable {
 //    @Serial
 //    private static final long serialVersionUID = 1L;
 //
@@ -117,4 +117,4 @@ public class SaleItem implements Serializable {
 //    public int hashCode() {
 //        return Objects.hash(id);
 //    }
-}
+//}

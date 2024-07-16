@@ -13,31 +13,31 @@ import java.util.List;
 @RequestMapping(value = "/users")
 public class UserController {
 
-    private UserService userService;
+    private UserService service;
 
-        @GetMapping
-    public ResponseEntity<User> findAll(){
-       User u = new User(1L, "Joana", "joana@gmail.com", "9876543", "147852");
-        return ResponseEntity.ok().body(u);
+    public UserController(UserService service) {
+        this.service = service;
     }
 
 
-//    public UserController(UserService userService) {
-//        this.userService = userService;
-//    }
-//
+
 //    @GetMapping
-//    public ResponseEntity<List<User>> findAll(){
-//        List<User> list = userService.findAll();
-//        return ResponseEntity.ok().body(list);
+//    public ResponseEntity<User> findAll(){
+//        User u = new User(1L, "Joana", "joana@gmail.com", "9876543", "147852");
+//        return ResponseEntity.ok().body(u);
 //    }
-//
-//    @GetMapping(value = "/{id}")
-//    public ResponseEntity<User> findById(@PathVariable Long id){
-//        User obj = userService.findById(id);
-//        return ResponseEntity.ok().body(obj);
-//    }
-//
+    @GetMapping
+    public ResponseEntity<List<User>> findAll(){
+        List<User> list = service.findAll();
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<User> findById(@PathVariable Long id){
+        User obj = service.findById(id);
+        return ResponseEntity.ok().body(obj);
+    }
+
 //    @PostMapping
 //    public ResponseEntity<User> insert(@RequestBody User obj){
 //        obj = userService.insert(obj);
