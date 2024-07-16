@@ -32,6 +32,9 @@ public class Sale implements Serializable {
     @OneToMany(mappedBy = "id.sale")
     private Set<SaleItem> items = new HashSet<>();
 
+    @OneToOne(mappedBy = "sale", cascade = CascadeType.ALL)
+    private Payment payment;
+
     public Sale() {
     }
 
@@ -74,6 +77,14 @@ public class Sale implements Serializable {
 
     public void setClient(User client) {
         this.client = client;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
     }
 
     public Set<SaleItem> getItems() {

@@ -1,9 +1,6 @@
 package com.ecommerce.project.ecommerce.config;
 
-import com.ecommerce.project.ecommerce.entities.Product;
-import com.ecommerce.project.ecommerce.entities.Sale;
-import com.ecommerce.project.ecommerce.entities.SaleItem;
-import com.ecommerce.project.ecommerce.entities.User;
+import com.ecommerce.project.ecommerce.entities.*;
 import com.ecommerce.project.ecommerce.enums.SaleStatus;
 import com.ecommerce.project.ecommerce.repositories.ProductRepository;
 import com.ecommerce.project.ecommerce.repositories.SaleItemRepository;
@@ -61,6 +58,11 @@ public class TestConfig implements CommandLineRunner {
         SaleItem si4 = new SaleItem(s3, p5, 2, p5.getPrice());
 
         saleItemRepository.saveAll(Arrays.asList(si1, si2, si3, si4));
+
+        Payment pay1 = new Payment(null, Instant.parse("2024-07-16T12:53:07Z"), s1);
+        s1.setPayment(pay1);
+
+        saleRepository.save(s1);
 
     }
 }
