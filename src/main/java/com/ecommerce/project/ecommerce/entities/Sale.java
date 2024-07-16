@@ -8,9 +8,7 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "tb_sale")
@@ -30,6 +28,9 @@ public class Sale implements Serializable {
     @ManyToOne
     @JoinColumn(name = "client_id")
     private User client;
+
+    @OneToMany(mappedBy = "id.sale")
+    private Set<SaleItem> items = new HashSet<>();
 
     public Sale() {
     }
@@ -73,6 +74,10 @@ public class Sale implements Serializable {
 
     public void setClient(User client) {
         this.client = client;
+    }
+
+    public Set<SaleItem> getItems() {
+        return items;
     }
 
     @Override

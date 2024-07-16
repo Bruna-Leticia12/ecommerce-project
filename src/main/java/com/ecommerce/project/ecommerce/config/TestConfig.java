@@ -2,9 +2,11 @@ package com.ecommerce.project.ecommerce.config;
 
 import com.ecommerce.project.ecommerce.entities.Product;
 import com.ecommerce.project.ecommerce.entities.Sale;
+import com.ecommerce.project.ecommerce.entities.SaleItem;
 import com.ecommerce.project.ecommerce.entities.User;
 import com.ecommerce.project.ecommerce.enums.SaleStatus;
 import com.ecommerce.project.ecommerce.repositories.ProductRepository;
+import com.ecommerce.project.ecommerce.repositories.SaleItemRepository;
 import com.ecommerce.project.ecommerce.repositories.SaleRepository;
 import com.ecommerce.project.ecommerce.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private SaleItemRepository saleItemRepository;
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -49,6 +54,13 @@ public class TestConfig implements CommandLineRunner {
         Sale s3 = new Sale(null, Instant.parse("2024-07-16T15:21:22Z"), SaleStatus.WATING_PAYMENT,  u1);
 
         saleRepository.saveAll(Arrays.asList(s1, s2, s3));
-    }
 
+        SaleItem si1 = new SaleItem(s1, p1, 2, p1.getPrice());
+        SaleItem si2 = new SaleItem(s1, p3, 1, p3.getPrice());
+        SaleItem si3 = new SaleItem(s2, p3, 2, p3.getPrice());
+        SaleItem si4 = new SaleItem(s3, p5, 2, p5.getPrice());
+
+        saleItemRepository.saveAll(Arrays.asList(si1, si2, si3, si4));
+
+    }
 }
