@@ -23,9 +23,9 @@ public class User implements Serializable {
     private String phone;
     private String password;
 
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "client")
-//    private List<Sale> sales = new ArrayList<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "client")
+    private List<Sale> sales = new ArrayList<>();
 
     public User() {}
 
@@ -77,9 +77,9 @@ public class User implements Serializable {
         this.password = password;
     }
 
-//    public List<Sale> getSales() {
-//        return sales;
-//    }
+    public List<Sale> getSales() {
+        return sales;
+    }
 
     @Override
     public boolean equals(Object o) {
