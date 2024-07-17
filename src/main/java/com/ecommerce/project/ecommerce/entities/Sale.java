@@ -89,12 +89,15 @@ public class Sale implements Serializable {
         return items;
     }
 
-    public Double getTotal(){
+    public Double getTotal() {
         double sum = 0.0;
-        for (SaleItem x : items) {
-            sum += x.getSubTotal();
+        for (SaleItem item : items) {
+            sum += item.getSubTotal();
         }
         return sum;
+    }
+
+    public void setTotal(Double total) {
     }
 
     @Override

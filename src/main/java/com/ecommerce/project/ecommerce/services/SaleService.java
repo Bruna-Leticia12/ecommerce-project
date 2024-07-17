@@ -1,7 +1,15 @@
 package com.ecommerce.project.ecommerce.services;
 
+import com.ecommerce.project.ecommerce.dto.SaleItemDTO;
+import com.ecommerce.project.ecommerce.entities.Product;
 import com.ecommerce.project.ecommerce.entities.Sale;
+import com.ecommerce.project.ecommerce.entities.SaleItem;
+import com.ecommerce.project.ecommerce.enums.SaleStatus;
+import com.ecommerce.project.ecommerce.repositories.ProductRepository;
+import com.ecommerce.project.ecommerce.repositories.SaleItemRepository;
 import com.ecommerce.project.ecommerce.repositories.SaleRepository;
+import com.ecommerce.project.ecommerce.services.exceptions.BadRequestException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ecommerce.project.ecommerce.entities.User;
 
@@ -20,10 +28,29 @@ import java.util.Optional;
 @Service
 public class SaleService {
 
+    @Autowired
     private SaleRepository repository;
 
-    public SaleService(SaleRepository repository) {
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private SaleItemRepository saleItemRepository;
+
+
+    @Autowired
+    public SaleService(SaleRepository repository, ProductRepository productRepository, UserService userService, ProductService productService, SaleItemRepository saleItemRepository) {
         this.repository = repository;
+        this.productRepository = productRepository;
+        this.userService = userService;
+        this.productService = productService;
+        this.saleItemRepository = saleItemRepository;
     }
 
     public List<Sale> findAll() {
@@ -32,55 +59,96 @@ public class SaleService {
 
     public Sale findById(Long id) {
         Optional<Sale> obj = repository.findById(id);
-        return obj.get();
+        return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
-//    @Transactional(readOnly = true)
-//
-//
-//
-//
-//    @Transactional(readOnly = true)
-//    public Sale findById(Long id) {
-//        Optional<Sale> obj = repository.findById(id);
-//        return obj.get();
-////        return repository.findById(id)
-////                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + id));
-//    }
+    public Sale create(Long clientId) {
+        User client = userService.findById(clientId);
+        Sale sale = new Sale(null, Instant.now(), SaleStatus.WAITING_PAYMENT, client);
+        return repository.save(sale);
+    }
+
+    public Sale insertItem(Long saleId, Long productId, int quantity) {
+        Sale sale = repository.findById(saleId)
+                .orElseThrow(() -> new ResourceNotFoundException("Sale not found with id: " + saleId));
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + productId));
+
+        SaleItem saleItem = new SaleItem(sale, product, quantity, product.getPrice());
+        sale.getItems().add(saleItem);
+
+        sale.setTotal(calculateTotal(sale));
+
+        return repository.save(sale);
+    }
+
+    public Sale itemRemove(Long saleId, Long productId) {
+        Sale sale = repository.findById(saleId)
+                .orElseThrow(() -> new ResourceNotFoundException("Sale not found with id: " + saleId));
+
+        SaleItem saleItem = sale.getItems().stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found in sale: " + productId));
+
+        sale.getItems().remove(saleItem);
+
+        sale.setTotal(calculateTotal(sale));
+
+        return repository.save(sale);
+    }
+
+    public Sale updateQuantity(Long saleId, SaleItemDTO dto) {
+        Sale sale = repository.findById(saleId)
+                .orElseThrow(() -> new ResourceNotFoundException("Sale not found with id: " + saleId));
+
+        SaleItem saleItem = sale.getItems().stream()
+                .filter(item -> item.getProduct().getId().equals(dto.getProductId()))
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found in sale: " + dto.getProductId()));
+
+        saleItem.setQuantity(dto.getQuantity());
+        saleItem.setSubTotal(saleItem.getProduct().getPrice() * dto.getQuantity());
+
+        sale.setTotal(calculateTotal(sale));
+
+        return repository.save(sale);
+    }
+
+    private double calculateTotal(Sale sale) {
+        double total = 0.0;
+        for (SaleItem item : sale.getItems()) {
+            total += item.getSubTotal();
+        }
+        return total;
+    }
 
 
-//
-//    @Transactional
-//    public Sale insert(Sale obj) {
-//        return saleRepository.save(obj);
-//    }
-//
-//    @Transactional
-//    public void delete(Long id) {
-//        try {
-//            saleRepository.deleteById(id);
-//        } catch (EmptyResultDataAccessException e) {
-//            throw new ResourceNotFoundException(id);
-//        } catch (DataIntegrityViolationException e) {
-//            throw new DatabaseException(e.getMessage());
-//        }
-//    }
-//
-//    @Transactional
-//    public Sale update(Long id, Sale obj) {
-//        try {
-//            Sale entity = saleRepository.getOne(id);
-//            updateData(entity, obj);
-//            return saleRepository.save(entity);
-//        } catch (EntityNotFoundException e) {
-//            throw new ResourceNotFoundException(id);
-//        }
-//    }
-//
-//    private void updateData(Sale entity, Sale obj) {
-//        entity.setSaleDate(obj.getSaleDate());
-//        entity.setSaleStatus(obj.getSaleStatus());
-//    }
+    // Método para cancelar uma venda
+    public Sale cancelSale(Long saleId) {
+        Sale sale = repository.findById(saleId)
+                .orElseThrow(() -> new ResourceNotFoundException("Sale not found with id: " + saleId));
+
+        if (sale.getSaleStatus() == SaleStatus.CANCELED) {
+            throw new IllegalStateException("Sale is already canceled.");
+        }
+
+        if (sale.getSaleStatus() == SaleStatus.CONFIRMED) {
+            sale.setSaleStatus(SaleStatus.CANCELED);
+
+            // Atualizar o total da venda (se necessário)
+            sale.setTotal(calculateTotal(sale));
+
+            return repository.save(sale);
+        } else {
+            throw new IllegalStateException("Cannot cancel a sale that is not confirmed.");
+        }
+    }
+
+}
+
+
 
 //    //gerar pagamento de vendas
 //    public Venda pagar(Integer vendaId) {
@@ -128,4 +196,4 @@ public class SaleService {
 //        System.out.println(diaDaSemana);
 //
 
-}
+

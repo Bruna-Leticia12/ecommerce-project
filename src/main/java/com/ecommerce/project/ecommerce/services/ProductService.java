@@ -5,6 +5,7 @@ import com.ecommerce.project.ecommerce.repositories.ProductRepository;
 import com.ecommerce.project.ecommerce.services.exceptions.DatabaseException;
 import com.ecommerce.project.ecommerce.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -21,6 +22,7 @@ public class ProductService {
 
     private ProductRepository repository;
 
+    @Autowired
     public ProductService(ProductRepository repository) {
         this.repository = repository;
     }
@@ -37,7 +39,7 @@ public class ProductService {
 
     public Product findById(Long id) {
         Optional<Product> obj = repository.findById(id);
-        return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+        return obj.orElseThrow(() -> new ResourceNotFoundException("Product not found: " + id));
     }
 
     //consultar produtos ativos

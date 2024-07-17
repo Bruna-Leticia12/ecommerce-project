@@ -18,6 +18,7 @@ public class SaleItem implements Serializable {
 
     private Integer quantity;
     private Double price;
+    private double subTotal;
 
     public SaleItem() {}
 
@@ -63,6 +64,10 @@ public class SaleItem implements Serializable {
 
     public Double getSubTotal(){
         return price * quantity;
+    }
+
+    public void setSubTotal(double subTotal) {
+        this.subTotal = subTotal;
     }
 
     @Override

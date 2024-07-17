@@ -1,7 +1,7 @@
 package com.ecommerce.project.ecommerce.enums;
 
 public enum SaleStatus {
-    WATING_PAYMENT (1),
+    WAITING_PAYMENT (1),
     CONFIRMED (2),
     CANCELED (3);
 

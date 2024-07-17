@@ -1,7 +1,9 @@
 package com.ecommerce.project.ecommerce.controllers;
 
+import com.ecommerce.project.ecommerce.dto.SaleItemDTO;
 import com.ecommerce.project.ecommerce.entities.Sale;
 import com.ecommerce.project.ecommerce.services.SaleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -15,22 +17,24 @@ public class SaleController {
 
     private SaleService service;
 
+    @Autowired
     public SaleController(SaleService service) {
         this.service = service;
     }
 
     @GetMapping
-    public ResponseEntity<List<Sale>> findAll(){
+    public ResponseEntity<List<Sale>> findAll() {
         List<Sale> list = service.findAll();
         return ResponseEntity.ok().body(list);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Sale> findById(@PathVariable Long id){
+    public ResponseEntity<Sale> findById(@PathVariable Long id) {
         Sale obj = service.findById(id);
         return ResponseEntity.ok().body(obj);
     }
-//
+
+    //
 //    //listar vendas entre datas
 //    @PostMapping(value = "/consulta-entre-datas")
 //    public ResponseEntity<List<Sale>> consultaEntreDatas(@RequestBody)
@@ -38,43 +42,44 @@ public class SaleController {
 //        return ResponseEntity.ok().body(list);
 //    }
 //
-////criar nova venda
-//@PostMapping(value = "/criar-venda")
-//public ResponseEntity<List<Sale>> consultaEntreDatas(@RequestParam (value = ))
-//Venda venda = service.criar(clienteId);
-//URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-//        return ResponseEntity.creaty(uri).body(venda);
-//    }
-//
-//
-//    //inserir item na venda
-//    @PostMapping(value = "{vendaId}/inserir-item")
-//    public ResponseEntity<Venda> inserirItem(@PathVariable Integer);
-//        return ResponseEntity.ok().body(service.inserirItem())
-//    }
-//
-////retirar item na venda
-//@DeleteMapping(value = "{vendaId}/deletar-item/{productId}")
-//public ResponseEntity<Venda> retirarItemVenda(@PathVariable );
-//        Venda venda = service.retirarItemVenda(vendaId, productId)
-//        return ResponseEntity.ok().body(venda);
-//        }
-//
-////atualizar quantidade item na venda
-//@PutMapping(value = "{vendaId}/atualizar-qnt-item")
-//public ResponseEntity<Venda> atualizarQuantidade(@PathVariable );
-//Venda venda = service.atualizarItemVenda(vendaId, dto)
-//        return ResponseEntity.ok().body(venda);
-//        }
-//
-//
-//
-//    //cancelar uma venda
-//    @PutMapping(value = "/{id}/cancelar")
-//public ResponseEntity<Sale> calcelar(@PathVariable Integer id){
-//    Sale sale = service.cancelarVenda(id);
-//    return ResponseEntity.ok().body(sale);
-//    }
+//criar nova venda
+    @PostMapping(value = "/create-sale")
+    public ResponseEntity<Sale> createSale(@RequestParam Long clientId) {
+        Sale sale = service.create(clientId);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(sale.getId()).toUri();
+        return ResponseEntity.created(uri).body(sale);
+    }
+
+
+    //inserir item na venda
+    @PostMapping(value = "/{saleId}/insert-item")
+    public ResponseEntity<Sale> insertItem(@PathVariable Long saleId, @RequestParam Long productId, @RequestParam Integer quantity) {
+        Sale sale = service.insertItem(saleId, productId, quantity);
+        return ResponseEntity.ok().body(sale);
+    }
+
+    //retirar item na venda
+    @DeleteMapping(value = "{saleId}/remove-item/{productId}")
+    public ResponseEntity<Sale> itemRemove(@PathVariable Long saleId, @PathVariable Long productId) {
+        Sale sale = service.itemRemove(saleId, productId);
+        return ResponseEntity.ok().body(sale);
+    }
+
+    //atualizar quantidade item na venda
+    @PutMapping(value = "{saleId}/updateQuantity")
+    public ResponseEntity<Sale> updateQuantity(@PathVariable Long saleId, @RequestBody SaleItemDTO dto) {
+        Sale sale = service.updateQuantity(saleId, dto);
+        return ResponseEntity.ok().body(sale);
+    }
+
+    //cancelar uma venda
+    @PutMapping("/{id}/cancelSale")
+    public ResponseEntity<Sale> cancelSale(@PathVariable Long id) {
+        Sale sale = service.cancelSale(id);
+        return ResponseEntity.ok().body(sale);
+    }
+
+}
 //
 //    //gerar pagamento de uma venda
 //@PutMapping(value = "/{id}/pagar")
@@ -119,4 +124,3 @@ public class SaleController {
 //        obj = service.update(id, obj);
 //        return ResponseEntity.ok().body(obj);
 //    }
-}
