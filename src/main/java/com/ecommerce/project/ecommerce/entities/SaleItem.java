@@ -3,7 +3,6 @@ package com.ecommerce.project.ecommerce.entities;
 import com.ecommerce.project.ecommerce.entities.pk.SaleItemPK;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
@@ -60,6 +59,10 @@ public class SaleItem implements Serializable {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public Double getSubTotal(){
+        return price * quantity;
     }
 
     @Override

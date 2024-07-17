@@ -2,9 +2,7 @@ package com.ecommerce.project.ecommerce.entities;
 
 import com.ecommerce.project.ecommerce.enums.SaleStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
@@ -89,6 +87,14 @@ public class Sale implements Serializable {
 
     public Set<SaleItem> getItems() {
         return items;
+    }
+
+    public Double getTotal(){
+        double sum = 0.0;
+        for (SaleItem x : items) {
+            sum += x.getSubTotal();
+        }
+        return sum;
     }
 
     @Override

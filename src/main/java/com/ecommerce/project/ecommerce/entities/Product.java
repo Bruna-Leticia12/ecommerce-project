@@ -2,9 +2,6 @@ package com.ecommerce.project.ecommerce.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-//import jakarta.validation.constraints.NotBlank;
-//import jakarta.validation.constraints.Positive;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
@@ -18,34 +15,21 @@ public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //
-//    @NotBlank(message = "Name is required")
-    private String name;
-    //
-    private String description;
-    //
-//    @Positive(message = "Price must be positive")
-    private double price;
-    //
-    private int stockQuantity;
 
-    //
-//    private boolean active = true;
-//
-//    @ManyToMany
-//    @JoinTable(name = "product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
-//    private Set<Category> categories = new HashSet<>();
+    private String name;
+
+    private String description;
+
+    private double price;
+
+    private int stockQuantity;
 
     @OneToMany(mappedBy = "id.product")
     private Set<SaleItem> items = new HashSet<>();
 
-//    @OneToMany(mappedBy = "product")
-//    private List<Order> orders = new ArrayList<>();
-//
     public Product() {
     }
 
-    //
     public Product(Long id, String name, String description, double price, int stockQuantity) {
         this.id = id;
         this.name = name;
@@ -116,59 +100,3 @@ public class Product implements Serializable {
         return Objects.hashCode(id);
     }
 }
-
-
-//
-//    public void setSaleItems(Set<SaleItem> saleItems) {
-//        this.saleItems = saleItems;
-//    }
-//
-//    public Set<Category> getCategories() {
-//        return categories;
-//    }
-//
-//    public void setCategories(Set<Category> categories) {
-//        this.categories = categories;
-//    }
-//
-//    public void setOrders(List<Order> orders) {
-//        this.orders = orders;
-//    }
-//
-//    public boolean isActive() {
-//        return active;
-//    }
-//
-//    public void setActive(boolean active) {
-//        this.active = active;
-//    }
-//
-//    public int getStockQuantity() {
-//        return stockQuantity;
-//    }
-//
-//    public void setStockQuantity(int stockQuantity) {
-//        this.stockQuantity = stockQuantity;
-//    }
-//
-//    public boolean hasEnoughStock(int quantity) {
-//        return this.stockQuantity >= quantity;
-//    }
-//
-//    public void decreaseStock(int quantity) {
-//        if (hasEnoughStock(quantity)) {
-//            this.stockQuantity -= quantity;
-//        } else {
-//            throw new RuntimeException("Insufficient stock");
-//        }
-//    }
-//
-//    @JsonIgnore
-//    public Set<Order> getOrder() {
-//        Set<Order> set = new HashSet<>();
-//        for (SaleItem saleItem : saleItems) {
-//            set.add(saleItem.getOrder());
-//        }
-//        return set;
-//    }
-

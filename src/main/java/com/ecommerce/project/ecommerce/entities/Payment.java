@@ -1,5 +1,6 @@
 package com.ecommerce.project.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -18,6 +19,7 @@ public class Payment implements Serializable {
     private Long id;
     private Instant paymentDate;
 
+    @JsonIgnore
     @OneToOne
     @MapsId
     private Sale sale;
