@@ -33,11 +33,11 @@ public class TestConfig implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        Product p1 = new Product(null, "Notebook", "Dell, Intel Core i7", 4000.00, 8);
-        Product p2 = new Product(null, "Calular", "Samsung, Galaxy S22", 2980.99, 15);
-        Product p3 = new Product(null, "TV", "LG 55 polegadas, 4K UHD", 2799.90, 10);
-        Product p4 = new Product(null, "Fone de Ouvido", "Bluetooth JBL", 598.99, 20);
-        Product p5 = new Product(null, "Playstation 5", "Console com 1TB", 4699.99, 4);
+        Product p1 = new Product(null, "Notebook", "Dell, Intel Core i7", 4000.00, 8, true);
+        Product p2 = new Product(null, "Calular", "Samsung, Galaxy S22", 2980.99, 15, true);
+        Product p3 = new Product(null, "TV", "LG 55 polegadas, 4K UHD", 2799.90, 10, true);
+        Product p4 = new Product(null, "Fone de Ouvido", "Bluetooth JBL", 598.99, 20, true);
+        Product p5 = new Product(null, "Playstation 5", "Console com 1TB", 4699.99, 4, false);
 
         productRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
 

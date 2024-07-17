@@ -2,10 +2,15 @@ package com.ecommerce.project.ecommerce.dto;
 
 import com.ecommerce.project.ecommerce.enums.SaleStatus;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 public class SaleDto {
 
+    Instant dataVenda;
+    Integer clienteId;
+
+}
 //    private int idPedido;
 //    private SaleStatus saleStatus;
 //    private LocalDate data;
@@ -51,4 +56,3 @@ public class SaleDto {
 //    public void setData_update(LocalDate data_update) {
 //        this.data_update = data_update;
 //    }
-}

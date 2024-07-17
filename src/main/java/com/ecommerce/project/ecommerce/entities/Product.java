@@ -15,14 +15,11 @@ public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
-
     private String description;
-
     private double price;
-
     private int stockQuantity;
+    private boolean available;
 
     @OneToMany(mappedBy = "id.product")
     private Set<SaleItem> items = new HashSet<>();
@@ -30,12 +27,13 @@ public class Product implements Serializable {
     public Product() {
     }
 
-    public Product(Long id, String name, String description, double price, int stockQuantity) {
+    public Product(Long id, String name, String description, double price, int stockQuantity, boolean available) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.stockQuantity = stockQuantity;
+        this.available = available;
     }
 
     public Long getId() {
@@ -76,6 +74,14 @@ public class Product implements Serializable {
 
     public void setStockQuantity(int stockQuantity) {
         this.stockQuantity = stockQuantity;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 
     @JsonIgnore

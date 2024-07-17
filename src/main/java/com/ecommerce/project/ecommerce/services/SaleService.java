@@ -13,6 +13,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,4 +81,51 @@ public class SaleService {
 //        entity.setSaleDate(obj.getSaleDate());
 //        entity.setSaleStatus(obj.getSaleStatus());
 //    }
+
+//    //gerar pagamento de vendas
+//    public Venda pagar(Integer vendaId) {
+//                venda venda = repository.getReferenceById(vendaId);
+//
+//        if(venda.getStatusVenda() == StatusVenda.PENDENTE){
+//            if(venda.getItens().size() > 0){
+//                Instant dataPgto = Instant.now();
+//                Pagamento pagamento = pagamentoService.criar(venda, dataPgto);
+//                venda.setPagamento(pagamento);
+//                venda.setStatusVenda(StatusVenda.FECHADA);
+//                return repository.save(venda);
+//            } else{
+//        throw new EmptyOrderExeption(vendaId);
+//    }else {
+//            throw new UnavailableOrderException(vendaId);
+//        }
+//    }
+//
+//
+//    //gerar rel mensal
+//
+//    public RelatorioDTO relatorioMensal (Integer mes, Integer ano){
+//        YearMonth mesRelat = YearMonth.of(ano, mes);
+//
+//        LocalDateTime dataInicialLocal = mesRelat.atDay(1).atStartOfDay();
+//        LocalDateTime dataFinalLocal = mesRelat.atEndOfMonth().atTime().atTime(23,59,59);
+//
+//        Instant dataInicial = dataInicialLocal.toInstant(ZoneOffset.UTC);
+//        Instant dataFinal = dataFinalLocal.toInstant(ZoneOffset.UTC);
+//
+//        Relatorio dto = gerarRelatorio(dataInicial, dataFinal);
+//
+//        return dto;
+//    }
+//
+//    //gerar rel semanal
+//    public RelatorioDTO relatorioSemanal (Integer ano, Integer mes, Integer dia){
+//        YearMonth mesRelat = YearMonth.of(ano, mes);
+//
+//        LocalDateTime dataConsulta = localDateTime.of(ano, mes, dia, 0, 0);
+//
+//        DayOfWeek diaDaSemana = dataConsulta.getDayOfWeek();
+//
+//        System.out.println(diaDaSemana);
+//
+
 }

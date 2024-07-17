@@ -13,19 +13,13 @@ import java.util.List;
 @RequestMapping(value = "/users")
 public class UserController {
 
+
     private UserService service;
 
     public UserController(UserService service) {
         this.service = service;
     }
 
-
-
-//    @GetMapping
-//    public ResponseEntity<User> findAll(){
-//        User u = new User(1L, "Joana", "joana@gmail.com", "9876543", "147852");
-//        return ResponseEntity.ok().body(u);
-//    }
     @GetMapping
     public ResponseEntity<List<User>> findAll(){
         List<User> list = service.findAll();

@@ -13,6 +13,7 @@ import java.util.List;
 @RequestMapping(value = "/products")
 public class ProductController {
 
+
     private ProductService service;
 
     public ProductController(ProductService service) {
@@ -31,25 +32,35 @@ public class ProductController {
         return ResponseEntity.ok().body(obj);
     }
 
-}
+    @GetMapping(value = "/available")
+    public ResponseEntity<List<Product>> findAvailable() {
+        List<Product> list = service.findAvailable();
+        return ResponseEntity.ok().body(list);
+    }
 
-//    @PostMapping
-//    public ResponseEntity<Product> insert(@RequestBody Product obj) {
-//        obj = productService.insert(obj);
-//        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-//                .buildAndExpand(obj.getId()).toUri();
-//        return ResponseEntity.created(uri).body(obj);
-//    }
-//
-//    @DeleteMapping(value = "/{id}")
-//    public ResponseEntity<Void> delete(@PathVariable Long id) {
-//        productService.delete(id);
-//        return ResponseEntity.noContent().build();
-//    }
-//
-//    @PutMapping(value = "/{id}")
-//    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product obj) {
-//        obj = productService.update(id, obj);
-//        return ResponseEntity.ok().body(obj);
-//    }
-//}
+    @GetMapping(value = "/inactive")
+    public ResponseEntity<List<Product>> findInactive() {
+        List<Product> list = service.findInactive();
+        return ResponseEntity.ok().body(list);
+    }
+
+    @PostMapping
+    public ResponseEntity<Product> insert(@RequestBody Product obj) {
+        obj = service.insert(obj);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+        return ResponseEntity.created(uri).body(obj);
+    }
+
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product obj) {
+        obj = service.update(id, obj);
+        return ResponseEntity.ok().body(obj);
+    }
+}
