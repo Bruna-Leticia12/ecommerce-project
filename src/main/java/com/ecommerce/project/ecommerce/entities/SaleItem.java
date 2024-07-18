@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 @Table(name = "tb_sale_item")
@@ -16,13 +18,19 @@ public class SaleItem implements Serializable {
     @EmbeddedId
     private SaleItemPK id = new SaleItemPK();
 
+    @PositiveOrZero
+    @NotNull
     private Integer quantity;
+
+    @PositiveOrZero
+    @NotNull
     private Double price;
     private double subTotal;
 
     public SaleItem() {}
 
     public SaleItem(Sale sale, Product product,Integer quantity, Double price) {
+        super();
         id.setSale(sale);
         id.setProduct(product);
         this.quantity = quantity;
@@ -82,4 +90,15 @@ public class SaleItem implements Serializable {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
+    @Override
+    public String toString() {
+        return "SaleItem{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                ", subTotal=" + subTotal +
+                '}';
+    }
+
 }

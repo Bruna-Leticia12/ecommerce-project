@@ -1,11 +1,8 @@
 package com.ecommerce.project.ecommerce.dto;
 
-import com.ecommerce.project.ecommerce.enums.SaleStatus;
-
 import java.time.Instant;
-import java.time.LocalDate;
 
-public class SaleDto {
+public class SaleDTO {
 
     Instant dataVenda;
     Integer clienteId;

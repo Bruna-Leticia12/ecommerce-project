@@ -16,14 +16,13 @@ public class Sale implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant saleDate;
+    private SaleStatus saleStatus;
 
-   private Integer saleStatus;
-
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "client_id")
     private User client;
 
@@ -34,20 +33,31 @@ public class Sale implements Serializable {
     private Payment payment;
 
     public Sale() {
+        this.saleStatus = SaleStatus.WAITING_PAYMENT;
     }
 
-    public Sale(Long id, Instant saleDate, SaleStatus saleStatus, User client) {
+    public Sale(Integer id, Instant saleDate, User client) {
+        super();
         this.id = id;
         this.saleDate = saleDate;
-        setSaleStatus(saleStatus);
+        this.saleStatus = SaleStatus.WAITING_PAYMENT;
         this.client = client;
     }
 
-    public Long getId() {
+    public Sale(Integer id, Instant saleDate, SaleStatus saleStatus, User client) {
+        super();
+        this.id = id;
+        this.saleDate = saleDate;
+        this.saleStatus = saleStatus;
+        //setSaleStatus(saleStatus);
+        this.client = client;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -60,12 +70,12 @@ public class Sale implements Serializable {
     }
 
     public SaleStatus getSaleStatus() {
-        return SaleStatus.valueOf(saleStatus);
+        return saleStatus;
     }
 
     public void setSaleStatus(SaleStatus saleStatus) {
         if (saleStatus != null) {
-            this.saleStatus = saleStatus.getCode();
+            this.saleStatus = saleStatus;
         }
     }
 
@@ -111,5 +121,16 @@ public class Sale implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Sale{" +
+                "id=" + id +
+                ", saleDate=" + saleDate +
+                ", saleStatus=" + saleStatus +
+                ", client=" + client +
+                ", payment=" + payment +
+                '}';
     }
 }

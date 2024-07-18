@@ -6,7 +6,4 @@ public class NoSuchElementCustomException extends RuntimeException {
         super(message);
     }
 
-//    public NoSuchElementCustomException(String message, Throwable cause) {
-//        super(message, cause);
-//    }
 }

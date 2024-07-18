@@ -1,13 +1,13 @@
 package com.ecommerce.project.ecommerce.controllers;
 
 import com.ecommerce.project.ecommerce.dto.SaleItemDTO;
+import com.ecommerce.project.ecommerce.dto.QueryDateDTO;
 import com.ecommerce.project.ecommerce.entities.Sale;
 import com.ecommerce.project.ecommerce.services.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import java.net.URI;
 import java.util.List;
 
@@ -22,105 +22,60 @@ public class SaleController {
         this.service = service;
     }
 
+    //Listar todas as vendas
     @GetMapping
     public ResponseEntity<List<Sale>> findAll() {
         List<Sale> list = service.findAll();
         return ResponseEntity.ok().body(list);
     }
 
+    //Listar uma venda por id
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Sale> findById(@PathVariable Long id) {
+    public ResponseEntity<Sale> findById(@PathVariable Integer id) {
         Sale obj = service.findById(id);
         return ResponseEntity.ok().body(obj);
     }
 
-    //
-//    //listar vendas entre datas
-//    @PostMapping(value = "/consulta-entre-datas")
-//    public ResponseEntity<List<Sale>> consultaEntreDatas(@RequestBody)
-//        List<Sale> list = service.consultaEntreDatas(dto);
-//        return ResponseEntity.ok().body(list);
-//    }
-//
-//criar nova venda
+    //Listar venda por data
+    @PostMapping(value = "/query-date-sale")
+    public ResponseEntity<List<Sale>> queryDate(@RequestBody QueryDateDTO dto) {
+        List<Sale> list = service.queryDate(dto);
+        return ResponseEntity.ok().body(list);
+    }
+
+    //Inserir uma venda
     @PostMapping(value = "/create-sale")
-    public ResponseEntity<Sale> createSale(@RequestParam Long clientId) {
-        Sale sale = service.create(clientId);
+    public ResponseEntity<Sale> create(@RequestParam (value = "user-id") Integer userId) {
+        Sale sale = service.create(userId);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(sale.getId()).toUri();
         return ResponseEntity.created(uri).body(sale);
     }
 
-
-    //inserir item na venda
-    @PostMapping(value = "/{saleId}/insert-item")
-    public ResponseEntity<Sale> insertItem(@PathVariable Long saleId, @RequestParam Long productId, @RequestParam Integer quantity) {
-        Sale sale = service.insertItem(saleId, productId, quantity);
-        return ResponseEntity.ok().body(sale);
+    //Inserir um item na venda
+    @PostMapping(value="{saleId}/insert-item")
+    public ResponseEntity<Sale> insertItem(@PathVariable Integer saleId, @RequestBody SaleItemDTO obj) {
+        return ResponseEntity.ok().body(service.insertItem(saleId, obj));
     }
 
-    //retirar item na venda
+    //Remover um item da venda
     @DeleteMapping(value = "{saleId}/remove-item/{productId}")
-    public ResponseEntity<Sale> itemRemove(@PathVariable Long saleId, @PathVariable Long productId) {
+    public ResponseEntity<Sale> itemRemove(@PathVariable Integer saleId, @PathVariable Integer productId) {
         Sale sale = service.itemRemove(saleId, productId);
         return ResponseEntity.ok().body(sale);
     }
 
-    //atualizar quantidade item na venda
-    @PutMapping(value = "{saleId}/updateQuantity")
-    public ResponseEntity<Sale> updateQuantity(@PathVariable Long saleId, @RequestBody SaleItemDTO dto) {
+    //Atualizar venda
+    @PutMapping(value = "{saleId}/update-quantity")
+    public ResponseEntity<Sale> updateQuantity(@PathVariable Integer saleId, @RequestBody SaleItemDTO dto) {
         Sale sale = service.updateQuantity(saleId, dto);
         return ResponseEntity.ok().body(sale);
     }
 
-    //cancelar uma venda
+    //Cancelar uma venda
     @PutMapping("/{id}/cancelSale")
-    public ResponseEntity<Sale> cancelSale(@PathVariable Long id) {
+    public ResponseEntity<Sale> cancelSale(@PathVariable Integer id) {
         Sale sale = service.cancelSale(id);
         return ResponseEntity.ok().body(sale);
     }
 
 }
-//
-//    //gerar pagamento de uma venda
-//@PutMapping(value = "/{id}/payment-sale")
-//public ResponseEntity<Sale> paymentSale(@PathVariable Integer id){
-//    Sale sale = service.pagar(id);
-//    return ResponseEntity.ok().body(sale);
-//}
-
-//////gerar relatorio mensal
-////@GetMapping(value = "/report-month/{ano}/{month}")
-//    public ResponseEntity<ReportDTO> reportMonth(@PathVariable Integer year, @PathVariable Integer month);
-//        System.out.println("1");
-//        ReportDTO dto = service.reportMonth(year, month);
-//        return ResponseEntity.ok().body(dto);
-//    }
-////
-//////gerar relatorio semanal
-//    @GetMapping(value = "/week-report/{year}/{month}/{day}")
-//    public ResponseEntity<ReportDTO> weekReport(@PathVariable Integer year, @PathVariable Integer month, @PathVariable Integer day);
-//        ReportDTO dto = service.reportWeek(year, month, day);
-//        return ResponseEntity.ok().body(dto);
-//    }
-
-    //olhar dpoisss
-
-//
-//    @PostMapping
-//    public ResponseEntity<Sale> insert(@RequestBody Sale obj){
-//        obj = service.insert(obj);
-//        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-//        return ResponseEntity.created(uri).body(obj);
-//    }
-//
-//    @DeleteMapping(value = "/{id}")
-//    public ResponseEntity<Void> delete(@PathVariable Long id){
-//        service.delete(id);
-//        return ResponseEntity.noContent().build();
-//    }
-//
-//    @PutMapping(value = "/{id}")
-//    public ResponseEntity<Sale> update(@PathVariable Long id, @RequestBody Sale obj){
-//        obj = service.update(id, obj);
-//        return ResponseEntity.ok().body(obj);
-//    }

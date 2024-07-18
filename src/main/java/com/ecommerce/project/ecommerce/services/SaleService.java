@@ -1,31 +1,34 @@
 package com.ecommerce.project.ecommerce.services;
 
+import com.ecommerce.project.ecommerce.dto.QueryDateDTO;
 import com.ecommerce.project.ecommerce.dto.SaleItemDTO;
 import com.ecommerce.project.ecommerce.entities.Product;
 import com.ecommerce.project.ecommerce.entities.Sale;
 import com.ecommerce.project.ecommerce.entities.SaleItem;
+import com.ecommerce.project.ecommerce.entities.User;
+import com.ecommerce.project.ecommerce.entities.pk.SaleItemPK;
 import com.ecommerce.project.ecommerce.enums.SaleStatus;
 import com.ecommerce.project.ecommerce.repositories.ProductRepository;
 import com.ecommerce.project.ecommerce.repositories.SaleItemRepository;
 import com.ecommerce.project.ecommerce.repositories.SaleRepository;
-import com.ecommerce.project.ecommerce.services.exceptions.BadRequestException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.ecommerce.project.ecommerce.entities.User;
-
-import com.ecommerce.project.ecommerce.services.exceptions.DatabaseException;
+import com.ecommerce.project.ecommerce.repositories.UserRepository;
+import com.ecommerce.project.ecommerce.services.exceptions.InsufficientStockException;
 import com.ecommerce.project.ecommerce.services.exceptions.ResourceNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
-
+import com.ecommerce.project.ecommerce.services.exceptions.UnavailableOrderException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+//@CacheConfig(cacheNames = "sales")
 public class SaleService {
 
     @Autowired
@@ -43,9 +46,21 @@ public class SaleService {
     @Autowired
     private SaleItemRepository saleItemRepository;
 
+    @Autowired
+    private SaleItemService saleItemService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PaymentService paymentService;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     public SaleService(SaleRepository repository, ProductRepository productRepository, UserService userService, ProductService productService, SaleItemRepository saleItemRepository) {
+        super();
         this.repository = repository;
         this.productRepository = productRepository;
         this.userService = userService;
@@ -53,37 +68,61 @@ public class SaleService {
         this.saleItemRepository = saleItemRepository;
     }
 
+    //Listar todas as vendas
+    @Cacheable(key="#root.methodName")
     public List<Sale> findAll() {
         return repository.findAll();
     }
 
-    public Sale findById(Long id) {
+    //Listar uma venda por id
+    public Sale findById(Integer id) {
         Optional<Sale> obj = repository.findById(id);
         return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
-    public Sale create(Long clientId) {
-        User client = userService.findById(clientId);
-        Sale sale = new Sale(null, Instant.now(), SaleStatus.WAITING_PAYMENT, client);
+    //Listar venda por data
+    public List<Sale> queryDate(QueryDateDTO dto) {
+        List<Sale> list = repository.findBySaleDateBetween(dto.getInitialDate(), dto.getFinalDate());
+        return list;
+    }
+
+    //Inserir uma venda
+    //@CacheEvict(allEntries = true)
+    public Sale create(Integer userId) {
+        Sale sale = new Sale();
+        Instant paymentDate = Instant.now();
+        sale.setSaleDate(paymentDate);
+
+        User user = userService.findById(userId);
+        user = entityManager.merge(user); // Garantir que a entidade User está gerenciada
+
+        sale.setClient(user);
         return repository.save(sale);
     }
 
-    public Sale insertItem(Long saleId, Long productId, int quantity) {
-        Sale sale = repository.findById(saleId)
-                .orElseThrow(() -> new ResourceNotFoundException("Sale not found with id: " + saleId));
+    //Inserir um item na venda
+    //@CacheEvict(allEntries = true)
+    public Sale insertItem(Integer saleId, SaleItemDTO dto) {
+        Sale sale = findById(saleId);
+        if (sale.getSaleStatus() == SaleStatus.WAITING_PAYMENT) {
+            Product product = productService.findById(dto.productId());
 
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + productId));
-
-        SaleItem saleItem = new SaleItem(sale, product, quantity, product.getPrice());
-        sale.getItems().add(saleItem);
-
-        sale.setTotal(calculateTotal(sale));
-
-        return repository.save(sale);
+            if (product.getStockQuantity() >= dto.quantity()) {
+                SaleItem item = saleItemService.insert(sale, product, dto.quantity());
+                sale.getItems().add(item);
+                productService.removeStockItem(dto.productId(), dto.quantity());
+                return repository.save(sale);
+            } else {
+                throw new InsufficientStockException(dto.productId());
+            }
+        } else {
+            throw new UnavailableOrderException(saleId);
+        }
     }
 
-    public Sale itemRemove(Long saleId, Long productId) {
+    //Remover um item da venda
+    //@CacheEvict(allEntries = true)
+    public Sale itemRemove(Integer saleId, Integer productId) {
         Sale sale = repository.findById(saleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Sale not found with id: " + saleId));
 
@@ -93,27 +132,47 @@ public class SaleService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found in sale: " + productId));
 
         sale.getItems().remove(saleItem);
-
         sale.setTotal(calculateTotal(sale));
 
         return repository.save(sale);
     }
 
-    public Sale updateQuantity(Long saleId, SaleItemDTO dto) {
-        Sale sale = repository.findById(saleId)
-                .orElseThrow(() -> new ResourceNotFoundException("Sale not found with id: " + saleId));
+    //Atualizar venda
+    //@CacheEvict(allEntries = true)
+    public Sale updateQuantity(Integer saleId, SaleItemDTO dto) {
+        Sale sale = findById(saleId);
 
-        SaleItem saleItem = sale.getItems().stream()
-                .filter(item -> item.getProduct().getId().equals(dto.getProductId()))
-                .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found in sale: " + dto.getProductId()));
+        if (sale.getSaleStatus() == SaleStatus.WAITING_PAYMENT) {
+            Product product = productService.findById(dto.productId());
 
-        saleItem.setQuantity(dto.getQuantity());
-        saleItem.setSubTotal(saleItem.getProduct().getPrice() * dto.getQuantity());
+            SaleItemPK itemVendaPK = new SaleItemPK();
+            itemVendaPK.setSale(sale);
+            itemVendaPK.setProduct(product);
 
-        sale.setTotal(calculateTotal(sale));
+            SaleItem saleItem = saleItemService.findById(itemVendaPK);
 
-        return repository.save(sale);
+            SaleItem updatedSaleItem = new SaleItem();
+            updatedSaleItem.setQuantity(dto.quantity());
+            updatedSaleItem.setPrice(saleItem.getPrice());
+
+            if (dto.quantity() > saleItem.getQuantity()) {
+                if (product.getStockQuantity() >= dto.quantity()) {
+                    productService.removeStockItem(dto.productId(), (dto.quantity() - saleItem.getQuantity()));
+                    saleItemService.updateData(itemVendaPK, updatedSaleItem);
+
+                    return repository.save(sale);
+                } else {
+                    throw new InsufficientStockException(dto.productId());
+                }
+            } else {
+                productService.includeStockItem(dto.productId(), (saleItem.getQuantity() - dto.quantity()));
+                saleItemService.updateData(itemVendaPK, updatedSaleItem);
+
+                return repository.save(sale);
+            }
+        } else {
+            throw new UnavailableOrderException(saleId);
+        }
     }
 
     private double calculateTotal(Sale sale) {
@@ -124,76 +183,21 @@ public class SaleService {
         return total;
     }
 
-
-    // Método para cancelar uma venda
-    public Sale cancelSale(Long saleId) {
+    //Cancelar uma venda
+    //@CacheEvict(allEntries = true)
+    public Sale cancelSale(Integer saleId) {
         Sale sale = repository.findById(saleId)
-                .orElseThrow(() -> new ResourceNotFoundException("Sale not found with id: " + saleId));
+                .orElseThrow(() -> new ResourceNotFoundException("Venda já cancelada: " + saleId));
 
         if (sale.getSaleStatus() == SaleStatus.CANCELED) {
-            throw new IllegalStateException("Sale is already canceled.");
+            throw new IllegalStateException("SVenda já cancelada.");
         }
-
         if (sale.getSaleStatus() == SaleStatus.CONFIRMED) {
             sale.setSaleStatus(SaleStatus.CANCELED);
-
-            // Atualizar o total da venda (se necessário)
             sale.setTotal(calculateTotal(sale));
-
             return repository.save(sale);
         } else {
-            throw new IllegalStateException("Cannot cancel a sale that is not confirmed.");
+            throw new IllegalStateException("Não é possível cancelar, venda não confirmada.");
         }
     }
-
 }
-
-
-
-//    //gerar pagamento de vendas
-//    public Venda pagar(Integer vendaId) {
-//                venda venda = repository.getReferenceById(vendaId);
-//
-//        if(venda.getStatusVenda() == StatusVenda.PENDENTE){
-//            if(venda.getItens().size() > 0){
-//                Instant dataPgto = Instant.now();
-//                Pagamento pagamento = pagamentoService.criar(venda, dataPgto);
-//                venda.setPagamento(pagamento);
-//                venda.setStatusVenda(StatusVenda.FECHADA);
-//                return repository.save(venda);
-//            } else{
-//        throw new EmptyOrderExeption(vendaId);
-//    }else {
-//            throw new UnavailableOrderException(vendaId);
-//        }
-//    }
-//
-//
-//    //gerar rel mensal
-//
-//    public RelatorioDTO relatorioMensal (Integer mes, Integer ano){
-//        YearMonth mesRelat = YearMonth.of(ano, mes);
-//
-//        LocalDateTime dataInicialLocal = mesRelat.atDay(1).atStartOfDay();
-//        LocalDateTime dataFinalLocal = mesRelat.atEndOfMonth().atTime().atTime(23,59,59);
-//
-//        Instant dataInicial = dataInicialLocal.toInstant(ZoneOffset.UTC);
-//        Instant dataFinal = dataFinalLocal.toInstant(ZoneOffset.UTC);
-//
-//        Relatorio dto = gerarRelatorio(dataInicial, dataFinal);
-//
-//        return dto;
-//    }
-//
-//    //gerar rel semanal
-//    public RelatorioDTO relatorioSemanal (Integer ano, Integer mes, Integer dia){
-//        YearMonth mesRelat = YearMonth.of(ano, mes);
-//
-//        LocalDateTime dataConsulta = localDateTime.of(ano, mes, dia, 0, 0);
-//
-//        DayOfWeek diaDaSemana = dataConsulta.getDayOfWeek();
-//
-//        System.out.println(diaDaSemana);
-//
-
-

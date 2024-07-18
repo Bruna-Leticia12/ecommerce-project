@@ -14,7 +14,7 @@ public class Product implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     private String name;
     private String description;
     private double price;
@@ -27,7 +27,8 @@ public class Product implements Serializable {
     public Product() {
     }
 
-    public Product(Long id, String name, String description, double price, int stockQuantity, boolean available) {
+    public Product(Integer id, String name, String description, double price, int stockQuantity, boolean available) {
+        super();
         this.id = id;
         this.name = name;
         this.description = description;
@@ -36,11 +37,11 @@ public class Product implements Serializable {
         this.available = available;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -105,4 +106,17 @@ public class Product implements Serializable {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", stockQuantity=" + stockQuantity +
+                ", available=" + available +
+                '}';
+    }
+
 }

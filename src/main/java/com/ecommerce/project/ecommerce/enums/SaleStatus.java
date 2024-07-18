@@ -21,6 +21,6 @@ public enum SaleStatus {
                 return value;
             }
         }
-        throw new IllegalArgumentException("Código Inválido");
+        throw new IllegalArgumentException("Invalid code");
     }
 }

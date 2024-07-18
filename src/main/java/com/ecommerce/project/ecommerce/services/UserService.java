@@ -1,40 +1,48 @@
 package com.ecommerce.project.ecommerce.services;
 
+import com.ecommerce.project.ecommerce.dto.UserUpdateDTO;
 import com.ecommerce.project.ecommerce.entities.User;
 import com.ecommerce.project.ecommerce.repositories.UserRepository;
 import com.ecommerce.project.ecommerce.services.exceptions.DatabaseException;
 import com.ecommerce.project.ecommerce.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+//@CacheConfig(cacheNames = "user")
 public class UserService {
 
+    @Autowired
     private UserRepository repository;
 
-    public UserService(UserRepository userRepository) {
-        this.repository = userRepository;
-    }
-
+    //Listar todos os usuarios
+    // @Cacheable(key="#root.methodName")
     public List<User> findAll() {
         return repository.findAll();
     }
 
-    public User findById(Long id) {
+    //Listar o usuario por id
+    public User findById(Integer id) {
         Optional<User> obj = repository.findById(id);
         return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
+    //Inserir um usuario
+    // 	@CacheEvict(allEntries = true)
     public User insert(User obj) {
-
         return repository.save(obj);
     }
 
-    public void delete(Long id) {
+    //Deletar um usuario
+    // 	@CacheEvict(allEntries = true)
+    public void delete(Integer id) {
         try {
             repository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
@@ -44,19 +52,22 @@ public class UserService {
         }
     }
 
-    public User update(Long id, User obj) {
+    //Atualizar um usuario
+    // 	@CacheEvict(allEntries = true)
+    public User update(Integer id, UserUpdateDTO dto) {
         try {
-            User entity = repository.getOne(id);
-            updateData(entity, obj);
+            User entity = repository.getReferenceById(id);
+            updateData(entity, dto);
             return repository.save(entity);
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(id);
         }
     }
 
-    private void updateData(User entity, User obj) {
-        entity.setName(obj.getName());
-        entity.setEmail(obj.getEmail());
-        entity.setPhone(obj.getPhone());
+    //Atualizar dados do usuario
+    private void updateData(User entity, UserUpdateDTO dto) {
+        entity.setName(dto.getNome());
+        entity.setEmail(dto.getEmail());
+        entity.setPhone(dto.getPhone());
     }
 }

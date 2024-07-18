@@ -1,8 +1,6 @@
 package com.ecommerce.project.ecommerce.dto;
 
-import java.time.LocalDate;
-
-public class ProductDto {
+public class ProductDTO {
 //
 //    private int id_categoria;
 //    private String nome;

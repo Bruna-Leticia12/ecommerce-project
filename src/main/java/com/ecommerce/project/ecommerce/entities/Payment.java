@@ -2,7 +2,6 @@ package com.ecommerce.project.ecommerce.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
@@ -16,28 +15,29 @@ public class Payment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     private Instant paymentDate;
 
     @JsonIgnore
     @OneToOne
     @MapsId
-   // @JoinColumn(name = venda_id)
+    @JoinColumn(name = "sale_id")
     private Sale sale;
 
     public Payment() {}
 
-    public Payment(Long id, Instant paymentDate, Sale sale) {
+    public Payment(Integer id, Instant paymentDate, Sale sale) {
+        super();
         this.id = id;
         this.paymentDate = paymentDate;
         this.sale = sale;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -68,5 +68,14 @@ public class Payment implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Payment{" +
+                "id=" + id +
+                ", paymentDate=" + paymentDate +
+                ", sale=" + sale +
+                '}';
     }
 }

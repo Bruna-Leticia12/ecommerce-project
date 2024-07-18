@@ -14,11 +14,12 @@
 //
 //@RestController
 //@RequestMapping("/caches")
-//public class CacheController {
+//public class CacheResource {
 //
 //    @Autowired
 //    private CacheManager cacheManager;
 //
+//    @SuppressWarnings("unchecked")
 //    @GetMapping("/{cacheName}")
 //    public ResponseEntity<Object> getCacheContent(@PathVariable String cacheName) {
 //        Cache cache = cacheManager.getCache(cacheName);
