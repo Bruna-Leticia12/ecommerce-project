@@ -7,23 +7,25 @@ import com.ecommerce.project.ecommerce.services.exceptions.DatabaseException;
 import com.ecommerce.project.ecommerce.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-//@CacheConfig(cacheNames = "user")
+@CacheConfig(cacheNames = "users")
 public class UserService {
 
     @Autowired
     private UserRepository repository;
 
     //Listar todos os usuarios
-    // @Cacheable(key="#root.methodName")
+     @Cacheable(key="#root.methodName")
     public List<User> findAll() {
         return repository.findAll();
     }
@@ -35,13 +37,13 @@ public class UserService {
     }
 
     //Inserir um usuario
-    // 	@CacheEvict(allEntries = true)
+    @CacheEvict(allEntries = true)
     public User insert(User obj) {
         return repository.save(obj);
     }
 
     //Deletar um usuario
-    // 	@CacheEvict(allEntries = true)
+    @CacheEvict(allEntries = true)
     public void delete(Integer id) {
         try {
             repository.deleteById(id);
@@ -53,7 +55,7 @@ public class UserService {
     }
 
     //Atualizar um usuario
-    // 	@CacheEvict(allEntries = true)
+    @CacheEvict(allEntries = true)
     public User update(Integer id, UserUpdateDTO dto) {
         try {
             User entity = repository.getReferenceById(id);

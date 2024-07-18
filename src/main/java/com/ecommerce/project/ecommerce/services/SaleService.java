@@ -16,11 +16,10 @@ import com.ecommerce.project.ecommerce.services.exceptions.InsufficientStockExce
 import com.ecommerce.project.ecommerce.services.exceptions.ResourceNotFoundException;
 import com.ecommerce.project.ecommerce.services.exceptions.UnavailableOrderException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.Instant;
@@ -28,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-//@CacheConfig(cacheNames = "sales")
+@CacheConfig(cacheNames = "sales")
 public class SaleService {
 
     @Autowired
@@ -87,7 +86,7 @@ public class SaleService {
     }
 
     //Inserir uma venda
-    //@CacheEvict(allEntries = true)
+    @CacheEvict(allEntries = true)
     public Sale create(Integer userId) {
         Sale sale = new Sale();
         Instant paymentDate = Instant.now();
@@ -101,7 +100,7 @@ public class SaleService {
     }
 
     //Inserir um item na venda
-    //@CacheEvict(allEntries = true)
+    @CacheEvict(allEntries = true)
     public Sale insertItem(Integer saleId, SaleItemDTO dto) {
         Sale sale = findById(saleId);
         if (sale.getSaleStatus() == SaleStatus.WAITING_PAYMENT) {
@@ -121,7 +120,7 @@ public class SaleService {
     }
 
     //Remover um item da venda
-    //@CacheEvict(allEntries = true)
+    @CacheEvict(allEntries = true)
     public Sale itemRemove(Integer saleId, Integer productId) {
         Sale sale = repository.findById(saleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Sale not found with id: " + saleId));
@@ -138,7 +137,7 @@ public class SaleService {
     }
 
     //Atualizar venda
-    //@CacheEvict(allEntries = true)
+    @CacheEvict(allEntries = true)
     public Sale updateQuantity(Integer saleId, SaleItemDTO dto) {
         Sale sale = findById(saleId);
 
@@ -184,7 +183,7 @@ public class SaleService {
     }
 
     //Cancelar uma venda
-    //@CacheEvict(allEntries = true)
+    @CacheEvict(allEntries = true)
     public Sale cancelSale(Integer saleId) {
         Sale sale = repository.findById(saleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Venda já cancelada: " + saleId));
@@ -200,4 +199,6 @@ public class SaleService {
             throw new IllegalStateException("Não é possível cancelar, venda não confirmada.");
         }
     }
+
+
 }

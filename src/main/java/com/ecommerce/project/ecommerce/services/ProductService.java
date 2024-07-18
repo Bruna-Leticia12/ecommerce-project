@@ -7,17 +7,17 @@ import com.ecommerce.project.ecommerce.services.exceptions.InsufficientStockExce
 import com.ecommerce.project.ecommerce.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-//@CacheConfig(cacheNames = "products")
+@CacheConfig(cacheNames = "products")
 public class ProductService {
 
     private ProductRepository repository;
@@ -28,7 +28,7 @@ public class ProductService {
     }
 
     //Listar todos os produtos
-    //    @Cacheable(key = "#root.methodName")
+    @Cacheable(key = "#root.methodName")
     public List<Product> findAll() {
         return repository.findAll();
     }
@@ -40,14 +40,14 @@ public class ProductService {
     }
 
     //Listar os todos os produtos Ativos
-    //    @Cacheable(key = "#root.methodName")
+    @Cacheable(key = "#root.methodName")
     public List<Product> findAvailable(){
 
         return repository.findByAvailableTrue();
     }
 
     // Deixar um produto inativo
-    //@CacheEvict(allEntries = true)
+    @CacheEvict(allEntries = true)
     public Product inactiveProduct(Integer id) {
         try {
             Product entity = repository.getReferenceById(id);
@@ -65,7 +65,7 @@ public class ProductService {
     }
 
     //Inserir um produto
-    //@CacheEvict(allEntries = true)
+    @CacheEvict(allEntries = true)
     public Product insert(Product obj) {
         return repository.save(obj);
     }
@@ -82,6 +82,7 @@ public class ProductService {
     }
 
     //Atualizar um produto
+    @CacheEvict(allEntries = true)
     public Product update(Integer id, Product obj) {
         try {
             Product entity = repository.getOne(id);
@@ -120,7 +121,7 @@ public class ProductService {
     }
 
     //Acresentar produtos no estoque
-    // @CacheEvict(allEntries = true)
+    @CacheEvict(allEntries = true)
     public Product includeStockItem(Integer id, Integer qtde) {
         try {
             System.out.println("2");
