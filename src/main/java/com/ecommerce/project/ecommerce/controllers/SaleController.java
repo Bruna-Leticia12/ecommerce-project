@@ -82,25 +82,25 @@ public class SaleController {
 }
 //
 //    //gerar pagamento de uma venda
-//@PutMapping(value = "/{id}/pagar")
-//public ResponseEntity<Sale> pagar(@PathVariable Integer id){
+//@PutMapping(value = "/{id}/payment-sale")
+//public ResponseEntity<Sale> paymentSale(@PathVariable Integer id){
 //    Sale sale = service.pagar(id);
 //    return ResponseEntity.ok().body(sale);
 //}
-//
-////gerar relatorio mensal
-//@GetMapping(value = "/relatorio-mensal/{ano}/{mes}")
-//public ResponseEntity<RelatorioDTO> relatorioMensal(@PathVariable Integer ano, @PathVariable Integer mes);
-//    System.out.println("1");
-//    RelatorioDTO dto = service.relatorioMensal(mes, ano);
-//    return ResponseEntity.ok().body(dto);
+
+//////gerar relatorio mensal
+////@GetMapping(value = "/report-month/{ano}/{month}")
+//    public ResponseEntity<ReportDTO> reportMonth(@PathVariable Integer year, @PathVariable Integer month);
+//        System.out.println("1");
+//        ReportDTO dto = service.reportMonth(year, month);
+//        return ResponseEntity.ok().body(dto);
 //    }
-//
-////gerar relatorio semanal
-//@GetMapping(value = "/relatorio-semanal/{ano}/{mes}/{dia}")
-//public ResponseEntity<RelatorioDTO> relatorioSemanal(@PathVariable Integer ano, @PathVariable Integer mes, @PathVariable Integer dia);
-//RelatorioDTO dto = service.relatorioSemanal(mes, ano, dia);
-//    return ResponseEntity.ok().body(dto);
+////
+//////gerar relatorio semanal
+//    @GetMapping(value = "/week-report/{year}/{month}/{day}")
+//    public ResponseEntity<ReportDTO> weekReport(@PathVariable Integer year, @PathVariable Integer month, @PathVariable Integer day);
+//        ReportDTO dto = service.reportWeek(year, month, day);
+//        return ResponseEntity.ok().body(dto);
 //    }
 
     //olhar dpoisss
