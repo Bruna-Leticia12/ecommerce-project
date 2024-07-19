@@ -11,6 +11,7 @@ public interface SaleRepository  extends JpaRepository<Sale, Integer> {
 
     //List<Sale> findBySaleDateBetween(Instant initialDate, Instant finalDate);
 
-    List<Sale> findBySaleDateBetween(Instant startDate, Instant endDate);
+    //List<Sale> findBySaleDateBetween(Instant startDate, Instant endDate);
+    List<Sale> findBySaleDateBetween(Instant initialDate, Instant finalDate);
 
 }

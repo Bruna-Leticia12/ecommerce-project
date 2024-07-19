@@ -37,18 +37,42 @@ public class ReportService {
         return generateReport(initialDate, finalDate);
     }
 
+    public ReportDTO queryDate(Instant initialDate, Instant finalDate) {
+        return generateReport(initialDate, finalDate);
+    }
+
+
     private ReportDTO generateReport(Instant initialDate, Instant finalDate) {
         List<Sale> sales = saleRepository.findBySaleDateBetween(initialDate, finalDate);
 
         int saleQuantity = sales.size();
         double totalValueSale = sales.stream().mapToDouble(Sale::getTotal).sum();
+
         int saleWaitingPayment = (int) sales.stream().filter(s -> s.getSaleStatus() == SaleStatus.WAITING_PAYMENT).count();
         double totalValueWaitingPayment = sales.stream().filter(s -> s.getSaleStatus() == SaleStatus.WAITING_PAYMENT).mapToDouble(Sale::getTotal).sum();
+
         int saleConfirmed = (int) sales.stream().filter(s -> s.getSaleStatus() == SaleStatus.CONFIRMED).count();
         double totalValueConfirmed = sales.stream().filter(s -> s.getSaleStatus() == SaleStatus.CONFIRMED).mapToDouble(Sale::getTotal).sum();
+
         int saleCanceled = (int) sales.stream().filter(s -> s.getSaleStatus() == SaleStatus.CANCELED).count();
         double totalValueCanceled = sales.stream().filter(s -> s.getSaleStatus() == SaleStatus.CANCELED).mapToDouble(Sale::getTotal).sum();
 
-        return new ReportDTO(initialDate, finalDate, saleQuantity, totalValueSale, saleWaitingPayment, totalValueWaitingPayment, saleConfirmed, totalValueConfirmed, saleCanceled, totalValueCanceled);
+        return new ReportDTO(initialDate, finalDate, saleQuantity, totalValueSale,
+                saleWaitingPayment, totalValueWaitingPayment, saleConfirmed, totalValueConfirmed,
+                saleCanceled, totalValueCanceled);
     }
+//    private ReportDTO generateReport(Instant initialDate, Instant finalDate) {
+//        List<Sale> sales = saleRepository.findBySaleDateBetween(initialDate, finalDate);
+//
+//        int saleQuantity = sales.size();
+//        double totalValueSale = sales.stream().mapToDouble(Sale::getTotal).sum();
+//        int saleWaitingPayment = (int) sales.stream().filter(s -> s.getSaleStatus() == SaleStatus.WAITING_PAYMENT).count();
+//        double totalValueWaitingPayment = sales.stream().filter(s -> s.getSaleStatus() == SaleStatus.WAITING_PAYMENT).mapToDouble(Sale::getTotal).sum();
+//        int saleConfirmed = (int) sales.stream().filter(s -> s.getSaleStatus() == SaleStatus.CONFIRMED).count();
+//        double totalValueConfirmed = sales.stream().filter(s -> s.getSaleStatus() == SaleStatus.CONFIRMED).mapToDouble(Sale::getTotal).sum();
+//        int saleCanceled = (int) sales.stream().filter(s -> s.getSaleStatus() == SaleStatus.CANCELED).count();
+//        double totalValueCanceled = sales.stream().filter(s -> s.getSaleStatus() == SaleStatus.CANCELED).mapToDouble(Sale::getTotal).sum();
+//
+//        return new ReportDTO(initialDate, finalDate, saleQuantity, totalValueSale, saleWaitingPayment, totalValueWaitingPayment, saleConfirmed, totalValueConfirmed, saleCanceled, totalValueCanceled);
+//    }
 }

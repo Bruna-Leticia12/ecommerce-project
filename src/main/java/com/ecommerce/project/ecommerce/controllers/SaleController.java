@@ -1,7 +1,6 @@
 package com.ecommerce.project.ecommerce.controllers;
 
 import com.ecommerce.project.ecommerce.dto.SaleItemDTO;
-import com.ecommerce.project.ecommerce.dto.QueryDateDTO;
 import com.ecommerce.project.ecommerce.entities.Sale;
 import com.ecommerce.project.ecommerce.services.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +35,12 @@ public class SaleController {
         return ResponseEntity.ok().body(obj);
     }
 
-    //Listar venda por data
-    @PostMapping(value = "/query-date-sale")
-    public ResponseEntity<List<Sale>> queryDate(@RequestBody QueryDateDTO dto) {
-        List<Sale> list = service.queryDate(dto);
-        return ResponseEntity.ok().body(list);
-    }
+//    //Listar venda por data
+//    @PostMapping(value = "/query-date-sale")
+//    public ResponseEntity<List<Sale>> queryDate(@RequestBody QueryDateDTO dto) {
+//        List<Sale> list = service.queryDate(dto);
+//        return ResponseEntity.ok().body(list);
+//    }
 
     //Inserir uma venda
     @PostMapping(value = "/create-sale")

@@ -1,6 +1,5 @@
 package com.ecommerce.project.ecommerce.services;
 
-import com.ecommerce.project.ecommerce.dto.QueryDateDTO;
 import com.ecommerce.project.ecommerce.dto.SaleItemDTO;
 import com.ecommerce.project.ecommerce.entities.Product;
 import com.ecommerce.project.ecommerce.entities.Sale;
@@ -66,11 +65,11 @@ public class SaleService {
         return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
-    //Listar venda por data
-    public List<Sale> queryDate(QueryDateDTO dto) {
-        List<Sale> list = repository.findBySaleDateBetween(dto.getInitialDate(), dto.getFinalDate());
-        return list;
-    }
+//    //Listar venda por data
+//    public List<Sale> queryDate(QueryDateDTO dto) {
+//        List<Sale> list = repository.findBySaleDateBetween(dto.getInitialDate(), dto.getFinalDate());
+//        return list;
+//    }
 
     //Inserir uma venda
     @CacheEvict(allEntries = true)
