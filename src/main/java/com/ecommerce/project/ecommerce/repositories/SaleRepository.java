@@ -9,6 +9,8 @@ import java.util.List;
 @Repository
 public interface SaleRepository  extends JpaRepository<Sale, Integer> {
 
-    List<Sale> findBySaleDateBetween(Instant initialDate, Instant finalDate);
+    //List<Sale> findBySaleDateBetween(Instant initialDate, Instant finalDate);
+
+    List<Sale> findBySaleDateBetween(Instant startDate, Instant endDate);
 
 }

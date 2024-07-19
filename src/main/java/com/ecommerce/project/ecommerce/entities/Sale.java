@@ -49,7 +49,6 @@ public class Sale implements Serializable {
         this.id = id;
         this.saleDate = saleDate;
         this.saleStatus = saleStatus;
-        //setSaleStatus(saleStatus);
         this.client = client;
     }
 
