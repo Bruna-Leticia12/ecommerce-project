@@ -42,7 +42,6 @@ public class SaleItemService {
         return repository.save(saleItem);
     }
 
-
     // Para deletar itemVenda								so posso deletar se o status estiver pendente
     public void delete(SaleItemPK saleItemPK) {
         try {
@@ -55,7 +54,6 @@ public class SaleItemService {
             throw new DatabaseException(e.getMessage());
         }
     }
-
 
     // Para atualizar itemVenda
     public SaleItem updateData(SaleItemPK itemVendaPK, SaleItem obj) {
@@ -70,13 +68,9 @@ public class SaleItemService {
 
     }
 
-
     private void updateItems(SaleItem entity, SaleItem obj) {
         entity.setQuantity(obj.getQuantity());
         entity.setPrice(obj.getPrice());
     }
-
-
-
 
 }

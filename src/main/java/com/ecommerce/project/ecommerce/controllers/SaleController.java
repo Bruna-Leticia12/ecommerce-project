@@ -35,13 +35,6 @@ public class SaleController {
         return ResponseEntity.ok().body(obj);
     }
 
-//    //Listar venda por data
-//    @PostMapping(value = "/query-date-sale")
-//    public ResponseEntity<List<Sale>> queryDate(@RequestBody QueryDateDTO dto) {
-//        List<Sale> list = service.queryDate(dto);
-//        return ResponseEntity.ok().body(list);
-//    }
-
     //Inserir uma venda
     @PostMapping(value = "/create-sale")
     public ResponseEntity<Sale> create(@RequestParam (value = "user-id") Integer userId) {
@@ -79,3 +72,10 @@ public class SaleController {
         return ResponseEntity.ok().body(sale);
     }
 }
+
+//    //Listar venda por data
+//    @PostMapping(value = "/query-date-sale")
+//    public ResponseEntity<List<Sale>> queryDate(@RequestBody QueryDateDTO dto) {
+//        List<Sale> list = service.queryDate(dto);
+//        return ResponseEntity.ok().body(list);
+//    }

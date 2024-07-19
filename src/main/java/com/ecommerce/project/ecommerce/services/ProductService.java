@@ -4,6 +4,7 @@ import com.ecommerce.project.ecommerce.entities.Product;
 import com.ecommerce.project.ecommerce.repositories.ProductRepository;
 import com.ecommerce.project.ecommerce.services.exceptions.DatabaseException;
 import com.ecommerce.project.ecommerce.services.exceptions.InsufficientStockException;
+import com.ecommerce.project.ecommerce.services.exceptions.MethodNotAllowed;
 import com.ecommerce.project.ecommerce.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,6 @@ public class ProductService {
     //Listar os todos os produtos Ativos
     @CacheEvict(allEntries = true)
     public List<Product> findAvailable(){
-
         return repository.findByAvailableTrue();
     }
 
@@ -54,12 +54,17 @@ public class ProductService {
     //Inserir um produto
     @CacheEvict(allEntries = true)
     public Product insert(Product obj) {
+        validateProductPrice(obj.getPrice());
         return repository.save(obj);
     }
 
     //Deletar um produto
     @CacheEvict(allEntries = true)
     public void delete(Integer id) {
+        Product product = findById(id);
+        if (!product.getSales().isEmpty()) {
+            throw new DatabaseException("Cannot delete product that has been sold");
+        }
         try {
             repository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
@@ -73,6 +78,7 @@ public class ProductService {
     @CacheEvict(allEntries = true)
     public Product update(Integer id, Product obj) {
         try {
+            validateProductPrice(obj.getPrice());
             Product entity = repository.getOne(id);
             updateData(entity, obj);
             return repository.save(entity);
@@ -99,9 +105,8 @@ public class ProductService {
                 return repository.save(entity);
             }
             else {
-                throw new InsufficientStockException(id);
+                throw new InsufficientStockException("Insufficient stock for product");
             }
-
         }
         catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(id);
@@ -112,13 +117,8 @@ public class ProductService {
     @CacheEvict(allEntries = true)
     public Product includeStockItem(Integer id, Integer qtde) {
         try {
-            System.out.println("2");
             Product entity = repository.getReferenceById(id);
-            System.out.println("estoque=" + entity.getStockQuantity());
-            System.out.println("qtde=" + qtde);
             entity.setStockQuantity(entity.getStockQuantity() + qtde);
-            System.out.println("estoque=" + entity.getStockQuantity());
-            System.out.println("qtde=" + qtde);
             return repository.save(entity);
         }
         catch (EntityNotFoundException e) {
@@ -139,4 +139,10 @@ public class ProductService {
         }
     }
 
+    // Método para validar se o preço do produto é positivo
+    private void validateProductPrice(double price) {
+        if (price <= 0) {
+            throw new MethodNotAllowed("Price must be positive");
+        }
+    }
 }

@@ -11,10 +11,7 @@ import com.ecommerce.project.ecommerce.repositories.ProductRepository;
 import com.ecommerce.project.ecommerce.repositories.SaleItemRepository;
 import com.ecommerce.project.ecommerce.repositories.SaleRepository;
 import com.ecommerce.project.ecommerce.repositories.UserRepository;
-import com.ecommerce.project.ecommerce.services.exceptions.CanceledOrderException;
-import com.ecommerce.project.ecommerce.services.exceptions.InsufficientStockException;
-import com.ecommerce.project.ecommerce.services.exceptions.ResourceNotFoundException;
-import com.ecommerce.project.ecommerce.services.exceptions.UnavailableOrderException;
+import com.ecommerce.project.ecommerce.services.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.cache.annotation.CacheConfig;
@@ -65,11 +62,6 @@ public class SaleService {
         return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
-//    //Listar venda por data
-//    public List<Sale> queryDate(QueryDateDTO dto) {
-//        List<Sale> list = repository.findBySaleDateBetween(dto.getInitialDate(), dto.getFinalDate());
-//        return list;
-//    }
 
     //Inserir uma venda
     @CacheEvict(allEntries = true)
@@ -103,7 +95,7 @@ public class SaleService {
                 productService.removeStockItem(dto.productId(), dto.quantity());
                 return repository.save(sale);
             } else {
-                throw new InsufficientStockException("Insufficient stock for product id " + dto.productId());
+                throw new InsufficientStockException("Insufficient stock for product");
             }
         } else {
             throw new UnavailableOrderException("Order with id " + saleId + " is not in WAITING_PAYMENT status.");
@@ -129,11 +121,14 @@ public class SaleService {
         }
     }
 
-    //Atualizar venda
+    // Atualizar venda
     @CacheEvict(allEntries = true)
     public Sale updateQuantity(Integer saleId, SaleItemDTO dto) {
         Sale sale = findById(saleId);
         if (sale.getSaleStatus() == SaleStatus.WAITING_PAYMENT) {
+            if (sale.getItems().isEmpty()) {
+                throw new EmptySaleException("Sale cannot be concluded without items.");
+            }
             Product product = productService.findById(dto.productId());
             SaleItemPK itemVendaPK = new SaleItemPK();
             itemVendaPK.setSale(sale);
@@ -147,21 +142,51 @@ public class SaleService {
                     productService.removeStockItem(dto.productId(), (dto.quantity() - itemVenda.getQuantity()));
                     saleItemService.updateData(itemVendaPK, newItem);
                     return repository.save(sale);
+                } else {
+                    throw new InsufficientStockException("Insufficient stock for product");
                 }
-                else {
-                    throw new InsufficientStockException(dto.productId());
-                }
-            }
-            else {
+            } else {
                 productService.includeStockItem(dto.productId(), (itemVenda.getQuantity() - dto.quantity()));
                 saleItemService.updateData(itemVendaPK, newItem);
                 return repository.save(sale);
             }
-        }
-        else {
+        } else {
             throw new UnavailableOrderException(saleId);
         }
     }
+//    //Atualizar venda
+//    @CacheEvict(allEntries = true)
+//    public Sale updateQuantity(Integer saleId, SaleItemDTO dto) {
+//        Sale sale = findById(saleId);
+//        if (sale.getSaleStatus() == SaleStatus.WAITING_PAYMENT) {
+//            Product product = productService.findById(dto.productId());
+//            SaleItemPK itemVendaPK = new SaleItemPK();
+//            itemVendaPK.setSale(sale);
+//            itemVendaPK.setProduct(product);
+//            SaleItem itemVenda = saleItemService.findById(itemVendaPK);
+//            SaleItem newItem = new SaleItem();
+//            newItem.setQuantity(dto.quantity());
+//            newItem.setPrice(itemVenda.getPrice());
+//            if (dto.quantity() > itemVenda.getQuantity()) {
+//                if (product.getStockQuantity() >= dto.quantity()) {
+//                    productService.removeStockItem(dto.productId(), (dto.quantity() - itemVenda.getQuantity()));
+//                    saleItemService.updateData(itemVendaPK, newItem);
+//                    return repository.save(sale);
+//                }
+//                else {
+//                    throw new InsufficientStockException("Insufficient stock for product");
+//                }
+//            }
+//            else {
+//                productService.includeStockItem(dto.productId(), (itemVenda.getQuantity() - dto.quantity()));
+//                saleItemService.updateData(itemVendaPK, newItem);
+//                return repository.save(sale);
+//            }
+//        }
+//        else {
+//            throw new UnavailableOrderException(saleId);
+//        }
+//    }
 
     private double calculateTotal(Sale sale) {
         double total = 0.0;
@@ -171,20 +196,46 @@ public class SaleService {
         return total;
     }
 
-    //Cancelar uma venda
+    // Cancelar uma venda
     @CacheEvict(allEntries = true)
     public Sale cancelSale(Integer id) {
         Sale cancel = repository.getReferenceById(id);
         if (cancel.getSaleStatus() != SaleStatus.CANCELED) {
+            if (cancel.getItems().isEmpty()) {
+                throw new EmptySaleException("Sale cannot be concluded without items.");
+            }
             cancel.setSaleStatus(SaleStatus.CANCELED);
             Set<SaleItem> items = cancel.getItems();
-            for(SaleItem item : items) {
+            for (SaleItem item : items) {
                 productService.includeStockItem(item.getProduct().getId(), item.getQuantity());
             }
             return repository.save(cancel);
-        }
-        else {
+        } else {
             throw new CanceledOrderException(id);
         }
     }
+
+//
+//    //Cancelar uma venda
+//    @CacheEvict(allEntries = true)
+//    public Sale cancelSale(Integer id) {
+//        Sale cancel = repository.getReferenceById(id);
+//        if (cancel.getSaleStatus() != SaleStatus.CANCELED) {
+//            cancel.setSaleStatus(SaleStatus.CANCELED);
+//            Set<SaleItem> items = cancel.getItems();
+//            for(SaleItem item : items) {
+//                productService.includeStockItem(item.getProduct().getId(), item.getQuantity());
+//            }
+//            return repository.save(cancel);
+//        }
+//        else {
+//            throw new CanceledOrderException(id);
+//        }
+//    }
 }
+
+//    //Listar venda por data
+//    public List<Sale> queryDate(QueryDateDTO dto) {
+//        List<Sale> list = repository.findBySaleDateBetween(dto.getInitialDate(), dto.getFinalDate());
+//        return list;
+//    }
