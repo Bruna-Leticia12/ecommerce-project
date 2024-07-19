@@ -38,13 +38,6 @@ public class ProductController {
         return ResponseEntity.ok().body(list);
     }
 
-    // Deixar um produto inativo
-    @PutMapping(value = "/{id}/inactive-product")
-    public ResponseEntity<Product> inactive(@PathVariable Integer id) {
-        Product product = service.inactiveProduct(id);
-        return ResponseEntity.ok().body(product);
-    }
-
     //Listar os todos os produtos Inativos
     @GetMapping(value = "/inactive")
     public ResponseEntity<List<Product>> findInactive() {
@@ -74,4 +67,10 @@ public class ProductController {
         return ResponseEntity.ok().body(obj);
     }
 
+    // Deixar um produto inativo
+    @PutMapping(value = "/{id}/inactive-product")
+    public ResponseEntity<Product> inactive(@PathVariable Integer id) {
+        Product product = service.inactiveProduct(id);
+        return ResponseEntity.ok().body(product);
+    }
 }

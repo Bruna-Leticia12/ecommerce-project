@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,7 +67,7 @@ public class UserService {
 
     //Atualizar dados do usuario
     private void updateData(User entity, UserUpdateDTO dto) {
-        entity.setName(dto.getNome());
+        entity.setName(dto.getName());
         entity.setEmail(dto.getEmail());
         entity.setPhone(dto.getPhone());
     }

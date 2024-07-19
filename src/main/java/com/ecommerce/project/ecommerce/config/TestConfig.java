@@ -40,20 +40,17 @@ public class TestConfig implements CommandLineRunner {
         User u5 = new User( "Julia Chagas", "julia@gmail.com", "994705511", "463587");
 
         //userRepository.saveAll(Arrays.asList(u1, u2, u3, u4, u5));
-        System.out.printf("Teste 1");
 
         // Criando e salvando vendas
-        Sale s1 = new Sale(null, Instant.parse("2024-07-13T10:53:07Z"), SaleStatus.CONFIRMED, u1);
-        Sale s2 = new Sale(null, Instant.parse("2024-07-13T03:42:10Z"), SaleStatus.WAITING_PAYMENT, u2);
+        Sale s1 = new Sale(null, Instant.parse("2024-07-13T10:53:07Z"), SaleStatus.WAITING_PAYMENT, u1);
+        Sale s2 = new Sale(null, Instant.parse("2024-07-13T03:42:10Z"), SaleStatus.CONFIRMED, u2);
         Sale s3 = new Sale(null, Instant.parse("2024-07-14T14:21:22Z"), SaleStatus.WAITING_PAYMENT, u1);
         Sale s4 = new Sale(null, Instant.parse("2024-07-15T09:15:08Z"), SaleStatus.CONFIRMED, u2);
         Sale s5 = new Sale(null, Instant.parse("2024-07-16T17:30:47Z"), SaleStatus.CANCELED, u3);
         Sale s6 = new Sale(null, Instant.parse("2024-07-17T11:10:54Z"), SaleStatus.CONFIRMED, u4);
         Sale s7 = new Sale(null, Instant.parse("2024-07-17T14:44:19Z"), SaleStatus.CONFIRMED, u5);
 
-        System.out.printf("Teste 2");
         saleRepository.saveAll(Arrays.asList(s1, s2, s3, s4, s5, s6, s7));
-        System.out.printf("Teste 3");
 
         // Criando e salvando produtos
         Product p1 = new Product(null, "Notebook", "Dell, Intel Core i7", 4000.00, 8, true);
@@ -78,11 +75,11 @@ public class TestConfig implements CommandLineRunner {
         saleItemRepository.saveAll(Arrays.asList(si1, si2, si3, si4, si5, si6, si7));
 
         // Criando e salvando pagamento para a venda s1
-        Payment pay1 = new Payment(null, Instant.parse("2024-07-13T12:50:07Z"), s1);
+        Payment pay1 = new Payment(null, Instant.parse("2024-07-13T12:50:07Z"), s2);
         Payment pay2 = new Payment(null, Instant.parse("2024-07-15T14:30:22Z"), s4);
         Payment pay3 = new Payment(null, Instant.parse("2024-07-17T12:00:54Z"), s6);
         Payment pay4 = new Payment(null, Instant.parse("2024-07-17T16:44:19Z"), s7);
-        s1.setPayment(pay1);
+        s2.setPayment(pay1);
         s4.setPayment(pay2);
         s6.setPayment(pay3);
         s7.setPayment(pay4);

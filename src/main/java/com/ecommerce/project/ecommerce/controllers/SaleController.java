@@ -54,7 +54,8 @@ public class SaleController {
     //Inserir um item na venda
     @PostMapping(value="{saleId}/insert-item")
     public ResponseEntity<Sale> insertItem(@PathVariable Integer saleId, @RequestBody SaleItemDTO obj) {
-        return ResponseEntity.ok().body(service.insertItem(saleId, obj));
+        Sale sale = service.insertItem(saleId, obj);
+        return ResponseEntity.ok().body(sale);
     }
 
     //Remover um item da venda
@@ -67,6 +68,7 @@ public class SaleController {
     //Atualizar venda
     @PutMapping(value = "{saleId}/update-quantity")
     public ResponseEntity<Sale> updateQuantity(@PathVariable Integer saleId, @RequestBody SaleItemDTO dto) {
+        System.out.println("meu dto aqui " + dto);
         Sale sale = service.updateQuantity(saleId, dto);
         return ResponseEntity.ok().body(sale);
     }
@@ -77,5 +79,4 @@ public class SaleController {
         Sale sale = service.cancelSale(id);
         return ResponseEntity.ok().body(sale);
     }
-
 }

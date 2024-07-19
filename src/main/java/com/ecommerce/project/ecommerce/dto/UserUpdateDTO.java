@@ -1,22 +1,22 @@
 package com.ecommerce.project.ecommerce.dto;
 
 public class UserUpdateDTO {
-    String nome;
+    String name;
     String email;
     String phone;
 
     public UserUpdateDTO(String nome, String email, String phone) {
-        this.nome = nome;
+        this.name = nome;
         this.email = email;
         this.phone = phone;
     }
 
-    public String getNome() {
-        return nome;
+    public String getName() {
+        return name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {

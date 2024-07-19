@@ -40,23 +40,10 @@ public class ProductService {
     }
 
     //Listar os todos os produtos Ativos
-    @Cacheable(key = "#root.methodName")
+    @CacheEvict(allEntries = true)
     public List<Product> findAvailable(){
 
         return repository.findByAvailableTrue();
-    }
-
-    // Deixar um produto inativo
-    @CacheEvict(allEntries = true)
-    public Product inactiveProduct(Integer id) {
-        try {
-            Product entity = repository.getReferenceById(id);
-            entity.setAvailable(false);
-            return repository.save(entity);
-        }
-        catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(id);
-        }
     }
 
     //Listar os todos os produtos Inativos
@@ -71,6 +58,7 @@ public class ProductService {
     }
 
     //Deletar um produto
+    @CacheEvict(allEntries = true)
     public void delete(Integer id) {
         try {
             repository.deleteById(id);
@@ -131,6 +119,19 @@ public class ProductService {
             entity.setStockQuantity(entity.getStockQuantity() + qtde);
             System.out.println("estoque=" + entity.getStockQuantity());
             System.out.println("qtde=" + qtde);
+            return repository.save(entity);
+        }
+        catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
+    }
+
+    // Deixar um produto inativo
+    @CacheEvict(allEntries = true)
+    public Product inactiveProduct(Integer id) {
+        try {
+            Product entity = repository.getReferenceById(id);
+            entity.setAvailable(false);
             return repository.save(entity);
         }
         catch (EntityNotFoundException e) {
