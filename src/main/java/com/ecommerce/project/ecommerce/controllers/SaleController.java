@@ -57,10 +57,10 @@ public class SaleController {
         return ResponseEntity.ok().body(sale);
     }
 
-    //Atualizar venda
+    //Atualizar quantidade venda
     @PutMapping(value = "{saleId}/update-quantity")
     public ResponseEntity<Sale> updateQuantity(@PathVariable Integer saleId, @RequestBody SaleItemDTO dto) {
-        System.out.println("meu dto aqui " + dto);
+        System.out.println(dto);
         Sale sale = service.updateQuantity(saleId, dto);
         return ResponseEntity.ok().body(sale);
     }

@@ -42,7 +42,7 @@ public class SaleItemService {
         return repository.save(saleItem);
     }
 
-    // Para deletar itemVenda								so posso deletar se o status estiver pendente
+    // Para deletar itemVenda
     public void delete(SaleItemPK saleItemPK) {
         try {
             if (repository.existsById(saleItemPK)) {
