@@ -65,8 +65,15 @@ public class SaleController {
         return ResponseEntity.ok().body(sale);
     }
 
+    // Confirmar uma venda
+    @PutMapping("/{id}/confirm-sale")
+    public ResponseEntity<Sale> confirmSale(@PathVariable Integer id) {
+        Sale sale = service.confirmSale(id);
+        return ResponseEntity.ok().body(sale);
+    }
+
     //Cancelar uma venda
-    @PutMapping("/{id}/cancelSale")
+    @PutMapping("/{id}/cancel-sale")
     public ResponseEntity<Sale> cancelSale(@PathVariable Integer id) {
         Sale sale = service.cancelSale(id);
         return ResponseEntity.ok().body(sale);

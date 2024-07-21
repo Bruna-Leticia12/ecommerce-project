@@ -12,11 +12,13 @@ import com.ecommerce.project.ecommerce.repositories.SaleItemRepository;
 import com.ecommerce.project.ecommerce.repositories.SaleRepository;
 import com.ecommerce.project.ecommerce.repositories.UserRepository;
 import com.ecommerce.project.ecommerce.services.exceptions.*;
+//import com.ecommerce.project.ecommerce.services.exceptions.IllegalArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -51,7 +53,7 @@ public class SaleService {
     private PaymentService paymentService;
 
     //Listar todas as vendas
-    @Cacheable(key="#root.methodName")
+    @Cacheable(key = "#root.methodName")
     public List<Sale> findAll() {
         return repository.findAll();
     }
@@ -115,8 +117,7 @@ public class SaleService {
             productService.includeStockItem(productId, item.getQuantity());
             saleItemService.delete(saleItemPK);
             return repository.save(sale);
-        }
-        else {
+        } else {
             throw new UnavailableOrderException(saleId);
         }
     }
@@ -196,24 +197,47 @@ public class SaleService {
         return total;
     }
 
+    // Confirmar uma venda
+    @CacheEvict(allEntries = true)
+    public Sale confirmSale(Integer id) {
+        Sale sale = repository.getReferenceById(id);
+        if (sale.getSaleStatus() == SaleStatus.WAITING_PAYMENT && !sale.getItems().isEmpty()) {
+            sale.setSaleStatus(SaleStatus.CONFIRMED);
+            return repository.save(sale);
+        } else if (sale.getSaleStatus() == SaleStatus.CANCELED) {
+            throw new ConfirmSaleException("Canceled sale cannot be confirmed.");
+        } else {
+            throw new ConfirmSaleException("Cannot confirm a sale with no items.");
+        }
+
+//            throw new IllegalArgumentException("Canceled sale cannot be confirmed.");
+//        } else {
+//            throw new IllegalArgumentException("Sale not confirmed.");
+//        }
+    }
+
     // Cancelar uma venda
     @CacheEvict(allEntries = true)
     public Sale cancelSale(Integer id) {
         Sale cancel = repository.getReferenceById(id);
-        if (cancel.getSaleStatus() != SaleStatus.CANCELED) {
-            if (cancel.getItems().isEmpty()) {
-                throw new EmptySaleException("Sale cannot be concluded without items.");
-            }
+        if (cancel.getSaleStatus() == SaleStatus.WAITING_PAYMENT) {
+//            if (cancel.getItems().isEmpty()) {
+//                throw new EmptySaleException("Sale cannot be concluded without items.");
+//            }
             cancel.setSaleStatus(SaleStatus.CANCELED);
             Set<SaleItem> items = cancel.getItems();
             for (SaleItem item : items) {
                 productService.includeStockItem(item.getProduct().getId(), item.getQuantity());
             }
             return repository.save(cancel);
-        } else {
-            throw new CanceledOrderException(id);
+        } else if (cancel.getSaleStatus() == SaleStatus.CONFIRMED) {
+            throw new CanceledOrderException("Cannot cancel confirmed sale.");
+        } else if (cancel.getSaleStatus() == SaleStatus.CANCELED) {
+            throw new CanceledOrderException("Sale is already canceled.");
         }
+        return cancel;
     }
+}
 
 //
 //    //Cancelar uma venda
@@ -232,7 +256,7 @@ public class SaleService {
 //            throw new CanceledOrderException(id);
 //        }
 //    }
-}
+
 
 //    //Listar venda por data
 //    public List<Sale> queryDate(QueryDateDTO dto) {

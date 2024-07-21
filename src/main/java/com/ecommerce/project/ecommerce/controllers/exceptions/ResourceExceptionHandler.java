@@ -1,8 +1,6 @@
 package com.ecommerce.project.ecommerce.controllers.exceptions;
 
-import com.ecommerce.project.ecommerce.services.exceptions.DatabaseException;
-import com.ecommerce.project.ecommerce.services.exceptions.NoSuchElementCustomException;
-import com.ecommerce.project.ecommerce.services.exceptions.ResourceNotFoundException;
+import com.ecommerce.project.ecommerce.services.exceptions.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +31,22 @@ public class ResourceExceptionHandler {
     public ResponseEntity<StandarError> noSuchElement(NoSuchElementCustomException e, HttpServletRequest request) {
         String error = "No such element";
         HttpStatus status = HttpStatus.NOT_FOUND;
+        StandarError err = new StandarError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(CanceledOrderException.class)
+    public ResponseEntity<StandarError> canceledOrderException(CanceledOrderException e, HttpServletRequest request) {
+        String error = "Sale not canceled";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandarError err = new StandarError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(ConfirmSaleException.class)
+    public ResponseEntity<StandarError> confirmSaleException(ConfirmSaleException e, HttpServletRequest request) {
+        String error = "Sale not confirmed";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
         StandarError err = new StandarError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
