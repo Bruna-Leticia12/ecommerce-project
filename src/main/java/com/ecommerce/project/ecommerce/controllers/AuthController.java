@@ -3,6 +3,7 @@ package com.ecommerce.project.ecommerce.controllers;
 import com.ecommerce.project.ecommerce.dto.LoginRequestDTO;
 import com.ecommerce.project.ecommerce.dto.RegisterRequestDTO;
 import com.ecommerce.project.ecommerce.dto.ResponseDTO;
+import com.ecommerce.project.ecommerce.dto.SuccessResponseDTO;
 import com.ecommerce.project.ecommerce.entities.User;
 import com.ecommerce.project.ecommerce.enums.UserRole;
 import com.ecommerce.project.ecommerce.infra.security.TokenService;
@@ -39,6 +40,8 @@ public class AuthController {
     @Autowired
     private UserRepository repository;
 
+
+
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid LoginRequestDTO data) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
@@ -59,7 +62,11 @@ public class AuthController {
 
         this.repository.save(newUser);
 
-        return ResponseEntity.ok().build();
+       // return ResponseEntity.ok().build();
+        SuccessResponseDTO response = new SuccessResponseDTO("Registro realizado com sucesso!");
+
+        return ResponseEntity.ok(response);
+
     }
 }
 

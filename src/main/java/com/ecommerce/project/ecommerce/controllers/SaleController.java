@@ -36,8 +36,10 @@ public class SaleController {
     }
 
     //Inserir uma venda
-    @PostMapping(value = "/create-sale")
-    public ResponseEntity<Sale> create(@RequestParam (value = "user-id") Integer userId) {
+    @PostMapping(value = "/create-sale/{userId}")
+    public ResponseEntity<Sale> create(@PathVariable Integer userId) {
+//    @PostMapping(value = "/create-sale")
+//    public ResponseEntity<Sale> create(@RequestParam (value = "user-id") Integer userId) {
         Sale sale = service.create(userId);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(sale.getId()).toUri();
         return ResponseEntity.created(uri).body(sale);
