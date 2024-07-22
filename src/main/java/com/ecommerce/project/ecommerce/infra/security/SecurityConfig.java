@@ -28,33 +28,46 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                    .requestMatchers("/h2-console/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                     .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                    .requestMatchers("/h2-console/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/caches/**").permitAll()
 
-                    .requestMatchers(HttpMethod.GET, "/products/**").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/products/available").hasRole("USER")
+                    .requestMatchers(HttpMethod.GET, "/products").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/products/{id}").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/products/inactive**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.POST, "/products/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.PUT, "/products/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
+
                     .requestMatchers(HttpMethod.GET, "/sales/**").hasRole("ADMIN")
-                    .requestMatchers(HttpMethod.POST, "/sales/**").hasRole("ADMIN")
-                    .requestMatchers(HttpMethod.PUT, "/sales/**").hasRole("ADMIN")
+//                    .requestMatchers(HttpMethod.POST, "/sales/**").hasRole("ADMIN")
+//                    .requestMatchers(HttpMethod.PUT, "/sales/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.DELETE, "/sales/**").hasRole("ADMIN")
+
                     .requestMatchers(HttpMethod.GET, "/users/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.POST, "/users/**").hasRole("ADMIN")
-                    .requestMatchers(HttpMethod.PUT, "/users/**").hasRole("ADMIN")
+//                    .requestMatchers(HttpMethod.PUT, "/users/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.GET, "/reports/**").hasRole("ADMIN")
 
-                    .requestMatchers(HttpMethod.POST, "/products/{id}").hasRole("USER")
-                    .requestMatchers(HttpMethod.POST, "/products/available").hasRole("USER")
-                    .requestMatchers(HttpMethod.POST, "/sales/create-sale/{userId}").hasRole("USER")
-                    .requestMatchers(HttpMethod.POST, "/sales/{saleId}/insert-item").hasRole("USER")
-                    .requestMatchers(HttpMethod.POST, "/sales/{id}/cancel-sale").hasRole("USER")
+//                    .requestMatchers(HttpMethod.POST, "/sales/create-sale/{userId}").hasRole("USER")
+//                    .requestMatchers(HttpMethod.POST, "/sales/{saleId}/insert-item").hasRole("USER")
+//                    .requestMatchers(HttpMethod.POST, "/sales/{id}/cancel-sale").hasRole("USER")
+//                    .requestMatchers(HttpMethod.PUT, "/users/{saleId}/update-quantity").hasRole("USER")
+//                    .requestMatchers(HttpMethod.PUT, "/users/{saleId}/remove-item/{productId}").hasRole("USER")
+
+
 
                     .anyRequest().authenticated()
             )
+
+//            .headers(headers -> headers.
+//                    frameOptions(frameOptions -> frameOptions.sameOrigin()))
+                .headers(headers -> headers.
+                        frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
+
             .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
             .build();
     }
@@ -74,5 +87,3 @@ public class SecurityConfig {
 //    @Autowired
 //    private CustomUserDetailsService  userDetailsService;
 
-//                .headers(headers -> headers.frameOptions(
-////                        HeadersConfigurer.FrameOptionsConfig::sameOrigin
