@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import java.net.URI;
 import java.util.List;
 
@@ -38,15 +39,13 @@ public class SaleController {
     //Inserir uma venda
     @PostMapping(value = "/create-sale/{userId}")
     public ResponseEntity<Sale> create(@PathVariable Integer userId) {
-//    @PostMapping(value = "/create-sale")
-//    public ResponseEntity<Sale> create(@RequestParam (value = "user-id") Integer userId) {
         Sale sale = service.create(userId);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(sale.getId()).toUri();
         return ResponseEntity.created(uri).body(sale);
     }
 
     //Inserir um item na venda
-    @PostMapping(value="{saleId}/insert-item")
+    @PostMapping(value = "{saleId}/insert-item")
     public ResponseEntity<Sale> insertItem(@PathVariable Integer saleId, @RequestBody SaleItemDTO obj) {
         Sale sale = service.insertItem(saleId, obj);
         return ResponseEntity.ok().body(sale);
@@ -81,10 +80,3 @@ public class SaleController {
         return ResponseEntity.ok().body(sale);
     }
 }
-
-//    //Listar venda por data
-//    @PostMapping(value = "/query-date-sale")
-//    public ResponseEntity<List<Sale>> queryDate(@RequestBody QueryDateDTO dto) {
-//        List<Sale> list = service.queryDate(dto);
-//        return ResponseEntity.ok().body(list);
-//    }

@@ -7,8 +7,4 @@ public class CanceledOrderException extends RuntimeException {
     public CanceledOrderException(String msg) {
         super(msg);
     }
-//    public CanceledOrderException(Object id) {
-//        super("Sale is now canceled, id: " + id);
-//    }
-
 }

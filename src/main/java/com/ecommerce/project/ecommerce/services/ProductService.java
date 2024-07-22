@@ -14,6 +14,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -42,12 +43,12 @@ public class ProductService {
 
     //Listar os todos os produtos Ativos
     @CacheEvict(allEntries = true)
-    public List<Product> findAvailable(){
+    public List<Product> findAvailable() {
         return repository.findByAvailableTrue();
     }
 
     //Listar os todos os produtos Inativos
-    public List<Product> findInactive(){
+    public List<Product> findInactive() {
         return repository.findByAvailableFalse();
     }
 
@@ -103,12 +104,10 @@ public class ProductService {
             if (entity.getStockQuantity() >= quantity) {
                 entity.setStockQuantity(entity.getStockQuantity() - quantity);
                 return repository.save(entity);
-            }
-            else {
+            } else {
                 throw new InsufficientStockException("Insufficient stock for product");
             }
-        }
-        catch (EntityNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(id);
         }
     }
@@ -120,8 +119,7 @@ public class ProductService {
             Product entity = repository.getReferenceById(id);
             entity.setStockQuantity(entity.getStockQuantity() + qtde);
             return repository.save(entity);
-        }
-        catch (EntityNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(id);
         }
     }
@@ -133,13 +131,12 @@ public class ProductService {
             Product entity = repository.getReferenceById(id);
             entity.setAvailable(false);
             return repository.save(entity);
-        }
-        catch (EntityNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(id);
         }
     }
 
-    // Método para validar se o preço do produto é positivo
+    // Validar prço do produto é positivo
     private void validateProductPrice(double price) {
         if (price <= 0) {
             throw new MethodNotAllowed("Price must be positive");

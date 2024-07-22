@@ -6,8 +6,4 @@ public class EmptySaleException extends RuntimeException {
     public EmptySaleException(String msg) {
         super(msg);
     }
-
-//    public EmptySaleException(String msg, Throwable cause) {
-//        super(msg, cause);
-//    }
 }

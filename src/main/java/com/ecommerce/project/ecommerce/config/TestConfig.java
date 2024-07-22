@@ -6,7 +6,6 @@ import com.ecommerce.project.ecommerce.enums.UserRole;
 import com.ecommerce.project.ecommerce.repositories.ProductRepository;
 import com.ecommerce.project.ecommerce.repositories.SaleItemRepository;
 import com.ecommerce.project.ecommerce.repositories.SaleRepository;
-import com.ecommerce.project.ecommerce.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -19,9 +18,6 @@ import java.util.Arrays;
 @Configuration
 @Profile("test")
 public class TestConfig implements CommandLineRunner {
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private SaleRepository saleRepository;
@@ -37,7 +33,6 @@ public class TestConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
 
         // Usuários
         User u1 = new User("Cassia Souza", "cassia@gmail.com", "995624713", passwordEncoder.encode("147369"), UserRole.USER);

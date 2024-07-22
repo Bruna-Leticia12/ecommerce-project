@@ -3,6 +3,7 @@ package com.ecommerce.project.ecommerce.entities;
 import com.ecommerce.project.ecommerce.enums.SaleStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
@@ -18,7 +19,7 @@ public class Sale implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant saleDate;
     private SaleStatus saleStatus;
 

@@ -3,9 +3,11 @@ package com.ecommerce.project.ecommerce.entities;
 import com.ecommerce.project.ecommerce.entities.pk.SaleItemPK;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
+
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
@@ -27,9 +29,10 @@ public class SaleItem implements Serializable {
     private Double price;
     private double subTotal;
 
-    public SaleItem() {}
+    public SaleItem() {
+    }
 
-    public SaleItem(Sale sale, Product product,Integer quantity, Double price) {
+    public SaleItem(Sale sale, Product product, Integer quantity, Double price) {
         super();
         id.setSale(sale);
         id.setProduct(product);
@@ -38,19 +41,19 @@ public class SaleItem implements Serializable {
     }
 
     @JsonIgnore
-    public Sale getSale(){
+    public Sale getSale() {
         return id.getSale();
     }
 
-    public void setSale(Sale sale){
+    public void setSale(Sale sale) {
         id.setSale(sale);
     }
 
-    public Product getProduct(){
+    public Product getProduct() {
         return id.getProduct();
     }
 
-    public void setProduct(Product product){
+    public void setProduct(Product product) {
         id.setProduct(product);
     }
 
@@ -70,7 +73,7 @@ public class SaleItem implements Serializable {
         this.price = price;
     }
 
-    public Double getSubTotal(){
+    public Double getSubTotal() {
         return price * quantity;
     }
 

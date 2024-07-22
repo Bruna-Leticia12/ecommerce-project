@@ -19,20 +19,19 @@ public class PaymentService {
     @Autowired
     private PaymentRepository repository;
 
-    // Para consultar pagamento por id
+    // Consultar pagamento por id
     public List<Payment> findAll() {
         return repository.findAll();
 
     }
 
-    // Para listar todos pagamento
+    // Listar todos pagamento
     public Payment findById(Integer id) {
         Optional<Payment> obj = repository.findById(id);
         return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
-
-    // Para criar um novo pagamento
+    // Criar um novo pagamento
     public Payment create(Sale sale, Instant paymentDate) {
         Payment payment = new Payment();
         payment.setPaymentDate(paymentDate);
@@ -40,7 +39,7 @@ public class PaymentService {
         return repository.save(payment);
     }
 
-    // Para deletar um pagamento
+    // Deletar um pagamento
     public void delete(Integer id) {
         try {
             if (repository.existsById(id)) {

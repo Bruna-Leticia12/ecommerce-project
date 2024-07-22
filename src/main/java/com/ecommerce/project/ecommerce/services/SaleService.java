@@ -12,7 +12,6 @@ import com.ecommerce.project.ecommerce.repositories.SaleItemRepository;
 import com.ecommerce.project.ecommerce.repositories.SaleRepository;
 import com.ecommerce.project.ecommerce.repositories.UserRepository;
 import com.ecommerce.project.ecommerce.services.exceptions.*;
-//import com.ecommerce.project.ecommerce.services.exceptions.IllegalArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.cache.annotation.CacheConfig;
@@ -63,7 +62,6 @@ public class SaleService {
         Optional<Sale> obj = repository.findById(id);
         return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
-
 
     //Inserir uma venda
     @CacheEvict(allEntries = true)
@@ -155,39 +153,6 @@ public class SaleService {
             throw new UnavailableOrderException(saleId);
         }
     }
-//    //Atualizar venda
-//    @CacheEvict(allEntries = true)
-//    public Sale updateQuantity(Integer saleId, SaleItemDTO dto) {
-//        Sale sale = findById(saleId);
-//        if (sale.getSaleStatus() == SaleStatus.WAITING_PAYMENT) {
-//            Product product = productService.findById(dto.productId());
-//            SaleItemPK itemVendaPK = new SaleItemPK();
-//            itemVendaPK.setSale(sale);
-//            itemVendaPK.setProduct(product);
-//            SaleItem itemVenda = saleItemService.findById(itemVendaPK);
-//            SaleItem newItem = new SaleItem();
-//            newItem.setQuantity(dto.quantity());
-//            newItem.setPrice(itemVenda.getPrice());
-//            if (dto.quantity() > itemVenda.getQuantity()) {
-//                if (product.getStockQuantity() >= dto.quantity()) {
-//                    productService.removeStockItem(dto.productId(), (dto.quantity() - itemVenda.getQuantity()));
-//                    saleItemService.updateData(itemVendaPK, newItem);
-//                    return repository.save(sale);
-//                }
-//                else {
-//                    throw new InsufficientStockException("Insufficient stock for product");
-//                }
-//            }
-//            else {
-//                productService.includeStockItem(dto.productId(), (itemVenda.getQuantity() - dto.quantity()));
-//                saleItemService.updateData(itemVendaPK, newItem);
-//                return repository.save(sale);
-//            }
-//        }
-//        else {
-//            throw new UnavailableOrderException(saleId);
-//        }
-//    }
 
     private double calculateTotal(Sale sale) {
         double total = 0.0;
@@ -209,11 +174,6 @@ public class SaleService {
         } else {
             throw new ConfirmSaleException("Cannot confirm a sale with no items.");
         }
-
-//            throw new IllegalArgumentException("Canceled sale cannot be confirmed.");
-//        } else {
-//            throw new IllegalArgumentException("Sale not confirmed.");
-//        }
     }
 
     // Cancelar uma venda
@@ -221,9 +181,6 @@ public class SaleService {
     public Sale cancelSale(Integer id) {
         Sale cancel = repository.getReferenceById(id);
         if (cancel.getSaleStatus() == SaleStatus.WAITING_PAYMENT) {
-//            if (cancel.getItems().isEmpty()) {
-//                throw new EmptySaleException("Sale cannot be concluded without items.");
-//            }
             cancel.setSaleStatus(SaleStatus.CANCELED);
             Set<SaleItem> items = cancel.getItems();
             for (SaleItem item : items) {
@@ -239,27 +196,3 @@ public class SaleService {
     }
 }
 
-//
-//    //Cancelar uma venda
-//    @CacheEvict(allEntries = true)
-//    public Sale cancelSale(Integer id) {
-//        Sale cancel = repository.getReferenceById(id);
-//        if (cancel.getSaleStatus() != SaleStatus.CANCELED) {
-//            cancel.setSaleStatus(SaleStatus.CANCELED);
-//            Set<SaleItem> items = cancel.getItems();
-//            for(SaleItem item : items) {
-//                productService.includeStockItem(item.getProduct().getId(), item.getQuantity());
-//            }
-//            return repository.save(cancel);
-//        }
-//        else {
-//            throw new CanceledOrderException(id);
-//        }
-//    }
-
-
-//    //Listar venda por data
-//    public List<Sale> queryDate(QueryDateDTO dto) {
-//        List<Sale> list = repository.findBySaleDateBetween(dto.getInitialDate(), dto.getFinalDate());
-//        return list;
-//    }

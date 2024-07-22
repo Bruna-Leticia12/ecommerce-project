@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +25,7 @@ public class UserService {
     private UserRepository repository;
 
     //Listar todos os usuarios
-     @Cacheable(key="#root.methodName")
+    @Cacheable(key = "#root.methodName")
     public List<User> findAll() {
         return repository.findAll();
     }

@@ -6,5 +6,4 @@ public class UnavailableOrderException extends RuntimeException {
     public UnavailableOrderException(Object id) {
 
     }
-
 }

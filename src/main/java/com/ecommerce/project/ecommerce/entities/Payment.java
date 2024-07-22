@@ -2,6 +2,7 @@ package com.ecommerce.project.ecommerce.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
@@ -24,7 +25,8 @@ public class Payment implements Serializable {
     @JoinColumn(name = "sale_id")
     private Sale sale;
 
-    public Payment() {}
+    public Payment() {
+    }
 
     public Payment(Integer id, Instant paymentDate, Sale sale) {
         super();

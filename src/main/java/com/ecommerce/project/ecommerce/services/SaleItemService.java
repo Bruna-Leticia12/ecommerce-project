@@ -21,7 +21,6 @@ public class SaleItemService {
     @Autowired
     private SaleItemRepository repository;
 
-
     // Para consultar venda
     public List<SaleItem> findAll() {
         return repository.findAll();
@@ -61,11 +60,9 @@ public class SaleItemService {
             SaleItem entity = repository.getReferenceById(itemVendaPK);
             updateItems(entity, obj);
             return repository.save(entity);
-        }
-        catch (EntityNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(itemVendaPK);
         }
-
     }
 
     private void updateItems(SaleItem entity, SaleItem obj) {

@@ -1,9 +1,9 @@
 package com.ecommerce.project.ecommerce.enums;
 
 public enum SaleStatus {
-    WAITING_PAYMENT (1),
-    CONFIRMED (2),
-    CANCELED (3);
+    WAITING_PAYMENT(1),
+    CONFIRMED(2),
+    CANCELED(3);
 
     private int code;
 

@@ -12,7 +12,8 @@ public class ProductRequest {
     private boolean ativo;
     private LocalDate data;
 
-    public ProductRequest() {}
+    public ProductRequest() {
+    }
 
     public int getId_categoria() {
         return id_categoria;
