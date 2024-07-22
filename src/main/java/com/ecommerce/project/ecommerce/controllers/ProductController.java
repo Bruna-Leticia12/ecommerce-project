@@ -1,6 +1,7 @@
 package com.ecommerce.project.ecommerce.controllers;
 
 import com.ecommerce.project.ecommerce.entities.Product;
+import com.ecommerce.project.ecommerce.repositories.ProductRepository;
 import com.ecommerce.project.ecommerce.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,8 @@ import java.util.List;
 @RequestMapping(value = "/products")
 public class ProductController {
 
+    @Autowired
+    ProductRepository repository;
 
     @Autowired
     private ProductService service;

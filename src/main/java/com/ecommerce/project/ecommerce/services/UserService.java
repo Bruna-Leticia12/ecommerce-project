@@ -68,7 +68,7 @@ public class UserService {
     //Atualizar dados do usuario
     private void updateData(User entity, UserUpdateDTO dto) {
         entity.setName(dto.getName());
-        entity.setEmail(dto.getEmail());
+        entity.setLogin(dto.getLogin());
         entity.setPhone(dto.getPhone());
     }
 }

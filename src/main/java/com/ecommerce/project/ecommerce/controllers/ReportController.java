@@ -25,8 +25,7 @@ public class ReportController {
         return ResponseEntity.ok().body(dto);
     }
 
-
-    @PostMapping(value = "/queryDate")
+    @GetMapping(value = "/queryDate")
     public ResponseEntity<ReportDTO> queryDate(@RequestBody ReportDTO consultaDataDTO) {
         ReportDTO dto = service.queryDate(consultaDataDTO.getInitialDate(), consultaDataDTO.getFinalDate());
         return ResponseEntity.ok().body(dto);

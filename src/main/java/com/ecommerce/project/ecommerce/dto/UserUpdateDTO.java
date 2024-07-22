@@ -2,12 +2,12 @@ package com.ecommerce.project.ecommerce.dto;
 
 public class UserUpdateDTO {
     String name;
-    String email;
+    String login;
     String phone;
 
-    public UserUpdateDTO(String nome, String email, String phone) {
+    public UserUpdateDTO(String nome, String login, String phone) {
         this.name = nome;
-        this.email = email;
+        this.login = login;
         this.phone = phone;
     }
 
@@ -19,12 +19,12 @@ public class UserUpdateDTO {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public String getLogin() {
+        return login;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getPhone() {

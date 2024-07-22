@@ -1,4 +1,6 @@
 package com.ecommerce.project.ecommerce.dto;
 
-public record RegisterRequestDTO (String name, String email, String phone, String password) {
+import com.ecommerce.project.ecommerce.enums.UserRole;
+
+public record RegisterRequestDTO (String name, String login, String phone, String password,  UserRole role) {
 }
